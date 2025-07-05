@@ -60,7 +60,7 @@ const Header = ({ onNavigate, currentPage }) => {
           
           <div className="dropdown">
             <button className="nav-button">
-              {t('navigation.lobby')} ▼
+              {t('navigation.lobby')}
             </button>
             <div className="dropdown-content">
               <button onClick={() => handleNavClick('/ranking', 'ranking')}>
@@ -80,7 +80,7 @@ const Header = ({ onNavigate, currentPage }) => {
           
           <div className="dropdown">
             <button className="nav-button">
-              {t('navigation.coaching')} ▼
+              {t('navigation.coaching')}
             </button>
             <div className="dropdown-content">
               <button onClick={() => handleNavClick('/coaching', 'coaching')}>
@@ -101,7 +101,7 @@ const Header = ({ onNavigate, currentPage }) => {
           
           <div className="dropdown">
             <button className="nav-button">
-              {t('navigation.contact')} ▼
+              {t('navigation.contact')}
             </button>
             <div className="dropdown-content">
               <button onClick={() => handleNavClick('/donations', 'donations')}>
@@ -115,7 +115,7 @@ const Header = ({ onNavigate, currentPage }) => {
           
           <div className="dropdown">
             <button className="nav-button">
-              Mídias Sociais ▼
+              Mídias Sociais
             </button>
             <div className="dropdown-content">
               <a href="https://twitter.com" target="_blank" rel="noopener noreferrer">

@@ -88,6 +88,7 @@
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
+  position: relative;
 }
 
 .nav-button:hover {
@@ -100,6 +101,18 @@
   background: rgba(212, 175, 55, 0.2);
   color: #d4af37;
   border-bottom: 2px solid #d4af37;
+}
+
+/* Estilo para flecha nos dropdowns */
+.dropdown .nav-button::after {
+  content: '▼';
+  margin-left: 0.5rem;
+  font-size: 0.7rem;
+  transition: transform 0.3s ease;
+}
+
+.dropdown:hover .nav-button::after {
+  transform: rotate(180deg);
 }
 
 /* Dropdown styles */
@@ -381,6 +394,12 @@
     font-size: 1rem;
     min-height: 48px;
     border: none;
+  }
+  
+  /* Ajuste da flecha no mobile */
+  .dropdown .nav-button::after {
+    margin-left: 0.3rem;
+    font-size: 0.6rem;
   }
   
   .main-content {
