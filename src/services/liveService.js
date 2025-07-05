@@ -98,7 +98,7 @@ class LiveService {
           title: 'Age of Empires 2 DE - Ranked Games',
           game: 'Age of Empires II: Definitive Edition',
           viewerCount: 245,
-          thumbnail: 'https://via.placeholder.com/320x180/6441a5/ffffff?text=Fs.Kawan+Live',
+          thumbnail: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIwIiBoZWlnaHQ9IjE4MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMzIwIiBoZWlnaHQ9IjE4MCIgZmlsbD0iIzY0NDFhNSIvPjx0ZXh0IHg9IjE2MCIgeT0iOTAiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxOCIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkZzLkthd2FuIExpdmU8L3RleHQ+PC9zdmc+',
           url: 'https://twitch.tv/fs_kawan',
           platform: 'twitch'
         },
@@ -108,7 +108,7 @@ class LiveService {
           title: 'Empire Wars Tournament Practice',
           game: 'Age of Empires II: Definitive Edition',
           viewerCount: 189,
-          thumbnail: 'https://via.placeholder.com/320x180/6441a5/ffffff?text=SheepKing+Live',
+          thumbnail: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIwIiBoZWlnaHQ9IjE4MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMzIwIiBoZWlnaHQ9IjE4MCIgZmlsbD0iIzY0NDFhNSIvPjx0ZXh0IHg9IjE2MCIgeT0iOTAiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxOCIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiPlNoZWVwS2luZyBMaXZlPC90ZXh0Pjwvc3ZnPg==',
           url: 'https://twitch.tv/sheepking_aoe',
           platform: 'twitch'
         }
@@ -146,7 +146,7 @@ class LiveService {
           title: 'Team Games Night - Age of Empires 2 DE',
           game: 'Age of Empires II: Definitive Edition',
           viewerCount: 156,
-          thumbnail: 'https://via.placeholder.com/320x180/ff0000/ffffff?text=FellowSheep+Live',
+          thumbnail: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIwIiBoZWlnaHQ9IjE4MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMzIwIiBoZWlnaHQ9IjE4MCIgZmlsbD0iI2ZmMDAwMCIvPjx0ZXh0IHg9IjE2MCIgeT0iOTAiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxOCIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkZlbGxvd1NoZWVwIExpdmU8L3RleHQ+PC9zdmc+',
           url: 'https://youtube.com/watch?v=live_stream',
           platform: 'youtube'
         }
