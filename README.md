@@ -1,6 +1,13 @@
-# Fellowsheep Gaming - Age of Empires 2 DE
+# 🐑 FellowSheep Gaming
 
-Website oficial do clan Fellowsheep Gaming para Age of Empires 2 Definitive Edition.
+Site oficial do clan FellowSheep Gaming para Age of Empires 2 DE.
+
+## 🏗️ Arquitetura
+
+O projeto está dividido em duas partes:
+
+- **Frontend**: React + Vite (pasta raiz)
+- **Backend**: FastAPI Python (pasta `backend/`)
 
 ## 🎮 Sobre o Projeto
 
@@ -84,22 +91,93 @@ O site é totalmente responsivo com:
   - 🎥 Twitch
   - 📸 Instagram
 
-## 🚀 Como Executar
+## 🚀 Como executar
 
-1. **Instalar dependências**:
-   ```bash
-   npm install
-   ```
+### Pré-requisitos
+- Node.js 18+
+- Python 3.8+
+- pip
 
-2. **Executar em desenvolvimento**:
-   ```bash
-   npm start
-   ```
+### Instalação completa
 
-3. **Build para produção**:
-   ```bash
-   npm run build
-   ```
+1. **Instalar dependências do frontend:**
+```bash
+npm install
+```
+
+2. **Instalar dependências do backend:**
+```bash
+npm run backend:install
+```
+
+3. **Executar frontend e backend simultaneamente:**
+```bash
+npm start
+```
+
+### Execução separada
+
+**Apenas frontend:**
+```bash
+npm run dev
+```
+
+**Apenas backend:**
+```bash
+npm run backend
+```
+
+## 🌐 URLs de acesso
+
+- **Frontend**: http://localhost:5173
+- **Backend**: http://localhost:8000
+- **API Docs**: http://localhost:8000/docs
+
+## 📁 Estrutura do projeto
+
+```
+fellowsheep-gaming/
+├── src/                    # Frontend React
+│   ├── components/         # Componentes React
+│   ├── pages/             # Páginas da aplicação
+│   └── services/          # Serviços (API)
+├── backend/               # Backend Python
+│   ├── main.py           # Servidor FastAPI
+│   ├── requirements.txt  # Dependências Python
+│   └── README.md         # Documentação do backend
+├── public/               # Arquivos estáticos
+└── package.json          # Configuração Node.js
+```
+
+## 🔧 Desenvolvimento
+
+### Scripts disponíveis
+
+- `npm start` - Executa frontend e backend
+- `npm run dev` - Apenas frontend
+- `npm run backend` - Apenas backend
+- `npm run build` - Build de produção
+- `npm run backend:install` - Instalar dependências Python
+
+### Variáveis de ambiente
+
+O frontend automaticamente detecta se está em desenvolvimento ou produção:
+- **Desenvolvimento**: Usa `http://localhost:8000` (backend local)
+- **Produção**: Usa `https://fellowsheep-backend.vercel.app` (backend remoto)
+
+## 🚀 Deploy
+
+### Frontend (Vercel)
+O frontend é automaticamente deployado no Vercel quando há push para o GitHub.
+
+### Backend (Vercel)
+O backend pode ser deployado como uma função serverless no Vercel ou em qualquer servidor Python.
+
+## 📚 Documentação
+
+- [Backend API](./backend/README.md) - Documentação completa da API
+- [Frontend](./src/) - Código do frontend React
+- [API Docs](http://localhost:8000/docs) - Documentação interativa da API (quando backend estiver rodando)
 
 ## 🤝 Contribuindo
 

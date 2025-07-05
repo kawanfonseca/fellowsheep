@@ -5,31 +5,30 @@ Backend proxy para o site FellowSheep Gaming que serve como intermediário para 
 ## 🚀 Como executar
 
 ### Pré-requisitos
-- Python 3.8+
-- pip
+- Node.js 18+
+- npm
 
 ### Instalação
 
 1. **Instalar dependências:**
 ```bash
-pip install -r requirements.txt
+npm install
 ```
 
 2. **Executar o servidor:**
 ```bash
-python start.py
+npm start
 ```
 
-Ou diretamente:
+Para desenvolvimento com reload automático:
 ```bash
-python main.py
+npm run dev
 ```
 
 ### Variáveis de ambiente
 
-- `HOST`: Host do servidor (padrão: 0.0.0.0)
 - `PORT`: Porta do servidor (padrão: 8000)
-- `RELOAD`: Habilitar reload automático (padrão: true)
+- `NODE_ENV`: Ambiente (development/production)
 
 ## 📚 Endpoints da API
 
@@ -47,7 +46,7 @@ python main.py
 ## 🔧 Desenvolvimento
 
 ### Documentação da API
-Acesse `http://localhost:8000/docs` para ver a documentação interativa da API.
+Acesse `http://localhost:8000/` para ver informações sobre os endpoints disponíveis.
 
 ### Logs
 O servidor registra logs detalhados de todas as requisições e erros.
@@ -69,14 +68,14 @@ Para deploy no Vercel, crie um arquivo `vercel.json` na raiz do projeto:
   "version": 2,
   "builds": [
     {
-      "src": "main.py",
-      "use": "@vercel/python"
+      "src": "server.js",
+      "use": "@vercel/node"
     }
   ],
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "main.py"
+      "dest": "server.js"
     }
   ]
 }
@@ -85,16 +84,16 @@ Para deploy no Vercel, crie um arquivo `vercel.json` na raiz do projeto:
 ### Railway
 Para deploy no Railway, use o comando:
 ```bash
-uvicorn main:app --host 0.0.0.0 --port $PORT
+npm start
 ```
 
 ### Render
 Para deploy no Render, configure o comando de build:
 ```bash
-pip install -r requirements.txt
+npm install
 ```
 
 E o comando de start:
 ```bash
-uvicorn main:app --host 0.0.0.0 --port $PORT
+npm start
 ```
