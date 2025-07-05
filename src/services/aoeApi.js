@@ -1,4 +1,4 @@
-const API_BASE_URL = 'https://aoe-api.worldsedgelink.com';
+const API_BASE_URL = 'https://aoe-api.reliclink.com';
 
 // Dados mockados para fallback
 const MOCK_DATA = {
