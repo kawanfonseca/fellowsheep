@@ -315,5 +315,21 @@
     "all_rights_reserved": "All rights reserved.",
     "privacy_policy": "Privacy Policy",
     "terms_of_service": "Terms of Service"
+  },
+  "build_orders": {
+    "civilization": "Civilization",
+    "category": "Category",
+    "difficulty": "Difficulty",
+    "author": "Author",
+    "timeToAge": "Time to Age",
+    "rating": "Rating",
+    "views": "Views",
+    "description": "Description",
+    "steps": "Steps",
+    "copyToClipboard": "Copy to Clipboard",
+    "print": "Print"
+  },
+  "common": {
+    "close": "Close"
   }
 } 

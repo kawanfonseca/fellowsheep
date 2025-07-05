@@ -337,5 +337,21 @@
     "all_rights_reserved": "版权所有。",
     "privacy_policy": "隐私政策",
     "terms_of_service": "服务条款"
+  },
+  "build_orders": {
+    "civilization": "文明",
+    "category": "类别",
+    "difficulty": "难度",
+    "author": "作者",
+    "timeToAge": "升级时间",
+    "rating": "评分",
+    "views": "查看次数",
+    "description": "描述",
+    "steps": "步骤",
+    "copyToClipboard": "复制到剪贴板",
+    "print": "打印"
+  },
+  "common": {
+    "close": "关闭"
   }
 } 

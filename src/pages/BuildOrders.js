@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import BuildOrderModal from '../components/BuildOrderModal';
 
 const BuildOrders = () => {
   const { t } = useTranslation();
@@ -119,6 +120,7 @@ const BuildOrders = () => {
   const [selectedCivilization, setSelectedCivilization] = useState('all');
   const [selectedDifficulty, setSelectedDifficulty] = useState('all');
   const [selectedBuildOrder, setSelectedBuildOrder] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const categories = ['all', 'Economia', 'Militar', 'Estratégico'];
   const civilizations = ['all', 'Todas', 'Britons', 'Mongols', 'Incas', 'Mayans'];
@@ -141,6 +143,16 @@ const BuildOrders = () => {
     if (difficulty === 'Iniciante') return '#6bcf7f';
     if (difficulty === 'Intermediário') return '#ffd93d';
     return '#ff6b6b';
+  };
+
+  const handleViewDetails = (buildOrder) => {
+    setSelectedBuildOrder(buildOrder);
+    setIsModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedBuildOrder(null);
   };
 
   return (
@@ -277,7 +289,7 @@ const BuildOrders = () => {
                   <button 
                     className="btn" 
                     style={{fontSize: '0.9rem'}}
-                    onClick={() => setSelectedBuildOrder(bo)}
+                    onClick={() => handleViewDetails(bo)}
                   >
                     Ver Detalhes
                   </button>
@@ -292,47 +304,11 @@ const BuildOrders = () => {
       </div>
       
       {selectedBuildOrder && (
-        <div className="card" style={{border: '2px solid #d4af37'}}>
-          <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem'}}>
-            <h3>{selectedBuildOrder.name} - Passos Detalhados</h3>
-            <button 
-              className="btn-secondary btn"
-              onClick={() => setSelectedBuildOrder(null)}
-            >
-              Fechar
-            </button>
-          </div>
-          
-          <div style={{marginBottom: '1rem'}}>
-            <strong>Civilização:</strong> {selectedBuildOrder.civilization} | 
-            <strong> Categoria:</strong> {selectedBuildOrder.category} | 
-            <strong> Dificuldade:</strong> {selectedBuildOrder.difficulty}
-          </div>
-          
-          <div style={{marginBottom: '1rem'}}>
-            <strong>Descrição:</strong> {selectedBuildOrder.description}
-          </div>
-          
-          <div>
-            <strong>Passos:</strong>
-            <ol style={{color: '#e0e0e0', marginTop: '0.5rem', paddingLeft: '1.5rem'}}>
-              {selectedBuildOrder.steps.map((step, index) => (
-                <li key={index} style={{marginBottom: '0.25rem'}}>
-                  {step}
-                </li>
-              ))}
-            </ol>
-          </div>
-          
-          <div style={{marginTop: '1rem'}}>
-            <button className="btn" style={{marginRight: '1rem'}}>
-              Copiar para Clipboard
-            </button>
-            <button className="btn-secondary btn">
-              Imprimir
-            </button>
-          </div>
-        </div>
+        <BuildOrderModal
+          isOpen={isModalOpen}
+          onClose={handleCloseModal}
+          buildOrder={selectedBuildOrder}
+        />
       )}
       
       <div className="card">

@@ -337,5 +337,21 @@
     "all_rights_reserved": "Todos os direitos reservados.",
     "privacy_policy": "Política de Privacidade",
     "terms_of_service": "Termos de Serviço"
+  },
+  "build_orders": {
+    "civilization": "Civilização",
+    "category": "Categoria",
+    "difficulty": "Dificuldade",
+    "author": "Autor",
+    "timeToAge": "Tempo para Idade",
+    "rating": "Avaliação",
+    "views": "Visualizações",
+    "description": "Descrição",
+    "steps": "Passos",
+    "copyToClipboard": "Copiar para Clipboard",
+    "print": "Imprimir"
+  },
+  "common": {
+    "close": "Fechar"
   }
 } 
