@@ -112,26 +112,6 @@ const Header = ({ onNavigate, currentPage }) => {
               </button>
             </div>
           </div>
-          
-          <div className="dropdown">
-            <button className="nav-button">
-              Mídias Sociais
-            </button>
-            <div className="dropdown-content">
-              <a href="https://twitter.com" target="_blank" rel="noopener noreferrer">
-                Twitter
-              </a>
-              <a href="https://youtube.com" target="_blank" rel="noopener noreferrer">
-                YouTube
-              </a>
-              <a href="https://twitch.tv" target="_blank" rel="noopener noreferrer">
-                Twitch
-              </a>
-              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">
-                Instagram
-              </a>
-            </div>
-          </div>
         </nav>
       </div>
     </header>

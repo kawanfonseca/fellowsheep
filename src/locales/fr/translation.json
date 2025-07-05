@@ -323,11 +323,19 @@
     "error": "Erreur",
     "success": "Succès",
     "cancel": "Annuler",
-    "save": "Sauvegarder",
+    "save": "Enregistrer",
     "edit": "Modifier",
     "delete": "Supprimer",
     "back": "Retour",
     "next": "Suivant",
     "previous": "Précédent"
+  },
+  "footer": {
+    "description": "Le clan le plus épique d'Age of Empires 2 Definitive Edition. Rejoignez-nous pour des batailles médiévales incroyables !",
+    "social_media": "Réseaux Sociaux",
+    "quick_links": "Liens Rapides",
+    "all_rights_reserved": "Tous droits réservés.",
+    "privacy_policy": "Politique de Confidentialité",
+    "terms_of_service": "Conditions d'Utilisation"
   }
 } 

@@ -329,5 +329,13 @@
     "back": "Voltar",
     "next": "Próximo",
     "previous": "Anterior"
+  },
+  "footer": {
+    "description": "O mais épico clan de Age of Empires 2 Definitive Edition. Junte-se a nós para batalhas medievais incríveis!",
+    "social_media": "Redes Sociais",
+    "quick_links": "Links Rápidos",
+    "all_rights_reserved": "Todos os direitos reservados.",
+    "privacy_policy": "Política de Privacidade",
+    "terms_of_service": "Termos de Serviço"
   }
 } 

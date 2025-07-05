@@ -4,6 +4,7 @@ import './App.css';
 
 // Importar componentes
 import Header from './components/Header';
+import Footer from './components/Footer';
 import LanguageSelector from './components/LanguageSelector';
 import Home from './pages/Home';
 import Ranking from './pages/Ranking';
@@ -42,6 +43,7 @@ function App() {
             <Route path="/contact" element={<Contact />} />
           </Routes>
         </main>
+        <Footer />
       </div>
     </Router>
   );

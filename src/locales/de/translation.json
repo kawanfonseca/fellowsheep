@@ -328,6 +328,14 @@
     "delete": "Löschen",
     "back": "Zurück",
     "next": "Weiter",
-    "previous": "Vorherige"
+    "previous": "Zurück"
+  },
+  "footer": {
+    "description": "Der epischste Age of Empires 2 Definitive Edition Clan. Schließen Sie sich uns für unglaubliche mittelalterliche Schlachten an!",
+    "social_media": "Soziale Medien",
+    "quick_links": "Schnelllinks",
+    "all_rights_reserved": "Alle Rechte vorbehalten.",
+    "privacy_policy": "Datenschutzrichtlinie",
+    "terms_of_service": "Nutzungsbedingungen"
   }
 } 

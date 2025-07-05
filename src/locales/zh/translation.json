@@ -327,7 +327,15 @@
     "edit": "编辑",
     "delete": "删除",
     "back": "返回",
-    "next": "下一个",
-    "previous": "上一个"
+    "next": "下一步",
+    "previous": "上一步"
+  },
+  "footer": {
+    "description": "最史诗般的帝国时代2决定版公会。加入我们，体验令人难以置信的中世纪战斗！",
+    "social_media": "社交媒体",
+    "quick_links": "快速链接",
+    "all_rights_reserved": "版权所有。",
+    "privacy_policy": "隐私政策",
+    "terms_of_service": "服务条款"
   }
 } 
