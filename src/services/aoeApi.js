@@ -1,6 +1,6 @@
 // URL do backend local (pode ser alterada para produção)
 const API_BASE_URL = process.env.NODE_ENV === 'production' 
-  ? 'https://fellowsheep-backend.vercel.app' 
+  ? 'https://fellowsheep.vercel.app/api' 
   : 'http://localhost:8000';
 
 // Dados mockados para fallback
@@ -99,7 +99,7 @@ class AoeApiService {
     }
 
     try {
-      const response = await fetch(`${API_BASE_URL}/api/leaderboards`);
+      const response = await fetch(`${API_BASE_URL}/leaderboards`);
       const data = await response.json();
       
       this.cache.set(cacheKey, {
@@ -152,7 +152,7 @@ class AoeApiService {
 
     try {
       const response = await fetch(
-        `${API_BASE_URL}/api/leaderboard/${leaderboardId}?start=${start}&count=${count}&sort_by=1`
+        `${API_BASE_URL}/leaderboard/${leaderboardId}?start=${start}&count=${count}&sort_by=1`
       );
       const data = await response.json();
       
@@ -225,9 +225,9 @@ class AoeApiService {
     }
 
     try {
-      const response = await fetch(
-        `${API_BASE_URL}/api/player/stats?profile_ids=${profileIds.join(',')}`
-      );
+              const response = await fetch(
+          `${API_BASE_URL}/player/stats?profile_ids=${profileIds.join(',')}`
+        );
       const data = await response.json();
       
       this.cache.set(cacheKey, {
@@ -305,9 +305,9 @@ class AoeApiService {
     }
 
     try {
-      const response = await fetch(
-        `${API_BASE_URL}/api/search/player?name=${encodeURIComponent(searchTerm)}&leaderboard_id=${leaderboardId}`
-      );
+              const response = await fetch(
+          `${API_BASE_URL}/search/player?name=${encodeURIComponent(searchTerm)}&leaderboard_id=${leaderboardId}`
+        );
       const data = await response.json();
       return data;
     } catch (error) {
