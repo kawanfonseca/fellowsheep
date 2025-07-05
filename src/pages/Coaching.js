@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 const Coaching = () => {
+  const { t } = useTranslation();
   const [coaches] = useState([
     {
       id: 1,
@@ -92,35 +94,35 @@ const Coaching = () => {
 
   return (
     <div className="page-container">
-      <h1 className="page-title">🎓 Coaching & Treinamento</h1>
+      <h1 className="page-title">{t('coaching.title')}</h1>
       <p className="page-subtitle">
-        Aprenda com os melhores jogadores do nosso clan
+        {t('coaching.subtitle')}
       </p>
       
       <div className="card">
-        <h3>📊 Nosso Sistema de Coaching</h3>
+        <h3>{t('coaching.coaching_system')}</h3>
         <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem'}}>
           <div style={{textAlign: 'center'}}>
             <div style={{fontSize: '2rem', color: '#d4af37', fontWeight: 'bold'}}>3</div>
-            <div style={{color: '#e0e0e0'}}>Coaches Ativos</div>
+            <div style={{color: '#e0e0e0'}}>{t('coaching.active_coaches')}</div>
           </div>
           <div style={{textAlign: 'center'}}>
             <div style={{fontSize: '2rem', color: '#6bcf7f', fontWeight: 'bold'}}>56</div>
-            <div style={{color: '#e0e0e0'}}>Alunos Treinados</div>
+            <div style={{color: '#e0e0e0'}}>{t('coaching.trained_students')}</div>
           </div>
           <div style={{textAlign: 'center'}}>
             <div style={{fontSize: '2rem', color: '#74c0fc', fontWeight: 'bold'}}>4.8</div>
-            <div style={{color: '#e0e0e0'}}>Avaliação Média</div>
+            <div style={{color: '#e0e0e0'}}>{t('coaching.avg_rating')}</div>
           </div>
           <div style={{textAlign: 'center'}}>
             <div style={{fontSize: '2rem', color: '#ffd93d', fontWeight: 'bold'}}>100%</div>
-            <div style={{color: '#e0e0e0'}}>Gratuito</div>
+            <div style={{color: '#e0e0e0'}}>{t('coaching.free')}</div>
           </div>
         </div>
       </div>
       
       <div className="card">
-        <h3>👨‍🏫 Nossos Coaches</h3>
+        <h3>{t('coaching.our_coaches')}</h3>
         <div style={{display: 'grid', gap: '1rem'}}>
           {coaches.map((coach) => (
             <div key={coach.id} className="card" style={{background: '#3a3a3a'}}>
@@ -129,23 +131,23 @@ const Coaching = () => {
                   <div style={{display: 'flex', alignItems: 'center', gap: '1rem', marginBottom: '0.5rem'}}>
                     <h4 style={{color: '#d4af37', margin: 0}}>{coach.name}</h4>
                     <span style={{color: '#e0e0e0', fontWeight: 'bold'}}>
-                      {coach.elo} ELO
+                      {coach.elo} {t('coaching.elo')}
                     </span>
                     <span style={{
                       color: coach.available ? '#6bcf7f' : '#ff6b6b',
                       fontWeight: 'bold'
                     }}>
-                      {coach.available ? '🟢 Disponível' : '🔴 Ocupado'}
+                      {coach.available ? t('coaching.available') : t('coaching.busy')}
                     </span>
                   </div>
                   <div style={{color: '#e0e0e0', marginBottom: '0.5rem'}}>
-                    <strong>Especialidades:</strong> {coach.specialties.join(', ')}
+                    <strong>{t('coaching.specialties')}</strong> {coach.specialties.join(', ')}
                   </div>
                   <div style={{color: '#e0e0e0', marginBottom: '0.5rem'}}>
-                    <strong>Experiência:</strong> {coach.experience} | <strong>Idiomas:</strong> {coach.languages.join(', ')}
+                    <strong>{t('coaching.experience')}</strong> {coach.experience} | <strong>{t('coaching.languages')}</strong> {coach.languages.join(', ')}
                   </div>
                   <div style={{color: '#e0e0e0', marginBottom: '0.5rem'}}>
-                    ⭐ {coach.rating} ({coach.students} alunos) | <strong>Preço:</strong> {coach.price}
+                    ⭐ {coach.rating} ({coach.students} {t('coaching.students')}) | <strong>{t('coaching.price')}</strong> {coach.price}
                   </div>
                 </div>
                 <div style={{display: 'flex', flexDirection: 'column', gap: '0.5rem'}}>
@@ -155,10 +157,10 @@ const Coaching = () => {
                     onClick={() => handleBooking(coach)}
                     disabled={!coach.available}
                   >
-                    {coach.available ? 'Agendar' : 'Indisponível'}
+                    {coach.available ? t('coaching.schedule') : t('coaching.unavailable')}
                   </button>
                   <button className="btn-secondary btn" style={{fontSize: '0.9rem'}}>
-                    Perfil
+                    {t('coaching.profile')}
                   </button>
                 </div>
               </div>
@@ -168,7 +170,7 @@ const Coaching = () => {
       </div>
       
       <div className="card">
-        <h3>🎯 Programas de Treinamento</h3>
+        <h3>{t('coaching.training_programs')}</h3>
         <div style={{display: 'grid', gap: '1rem'}}>
           {trainingPrograms.map((program) => (
             <div key={program.id} className="card" style={{background: '#3a3a3a'}}>
@@ -183,17 +185,17 @@ const Coaching = () => {
                       padding: '0.25rem 0.5rem',
                       borderRadius: '4px'
                     }}>
-                      {program.level}
+                      {t(`coaching.${program.level.toLowerCase()}`)}
                     </span>
                   </div>
                   <div style={{color: '#e0e0e0', marginBottom: '0.5rem'}}>
-                    <strong>Duração:</strong> {program.duration} | <strong>Instrutor:</strong> {program.instructor}
+                    <strong>{t('coaching.duration')}</strong> {program.duration} | <strong>{t('coaching.instructor')}</strong> {program.instructor}
                   </div>
                   <div style={{color: '#e0e0e0', marginBottom: '0.5rem'}}>
-                    <strong>Tópicos:</strong> {program.topics.join(', ')}
+                    <strong>{t('coaching.topics')}</strong> {program.topics.join(', ')}
                   </div>
                   <div style={{color: '#e0e0e0', marginBottom: '0.5rem'}}>
-                    <strong>Próxima turma:</strong> {program.nextStart} | <strong>Vagas:</strong> {program.spots}
+                    <strong>{t('coaching.next_class')}</strong> {program.nextStart} | <strong>{t('coaching.spots')}</strong> {program.spots}
                   </div>
                 </div>
                 <div style={{display: 'flex', flexDirection: 'column', gap: '0.5rem'}}>

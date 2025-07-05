@@ -1,50 +1,50 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 const Home = () => {
+  const { t } = useTranslation();
+
   return (
     <div className="page-container">
-      <h1 className="page-title">Bem-vindos ao Fellowsheep Gaming</h1>
+      <h1 className="page-title">{t('home.title')}</h1>
       <p className="page-subtitle">
-        O mais épico clan de Age of Empires 2 Definitive Edition
+        {t('home.subtitle')}
       </p>
       
       <div className="card">
-        <h3>🏰 Sobre Nós</h3>
+        <h3>{t('home.about_title')}</h3>
         <p>
-          Somos um grupo de jogadores apaixonados por Age of Empires 2 DE, focados em 
-          crescer juntos, compartilhar conhecimento e dominar os campos de batalha medievais. 
-          Nosso clan é dedicado tanto a jogadores iniciantes quanto veteranos.
+          {t('home.about_text')}
         </p>
       </div>
       
       <div className="card">
-        <h3>⚔️ Nossos Pilares</h3>
+        <h3>{t('home.pillars_title')}</h3>
         <p>
-          <strong>Competição:</strong> Participamos de torneios e ranqueamos juntos<br/>
-          <strong>Aprendizado:</strong> Compartilhamos estratégias e build orders<br/>
-          <strong>Comunidade:</strong> Criamos amizades que vão além do jogo<br/>
-          <strong>Diversão:</strong> Porque jogar deve ser sempre divertido!
+          <strong>{t('home.competition')}</strong> {t('home.competition_text')}<br/>
+          <strong>{t('home.learning')}</strong> {t('home.learning_text')}<br/>
+          <strong>{t('home.community')}</strong> {t('home.community_text')}<br/>
+          <strong>{t('home.fun')}</strong> {t('home.fun_text')}
         </p>
       </div>
       
       <div className="card">
-        <h3>🎯 Destaques Recentes</h3>
+        <h3>{t('home.highlights_title')}</h3>
         <p>
-          • Subimos 3 posições no ranking mundial de clans<br/>
-          • 15 membros alcançaram novo ELO pessoal este mês<br/>
-          • Organizamos nosso primeiro torneio interno com 32 participantes<br/>
-          • Novo sistema de coaching implementado com sucesso
+          • {t('home.highlight1')}<br/>
+          • {t('home.highlight2')}<br/>
+          • {t('home.highlight3')}<br/>
+          • {t('home.highlight4')}
         </p>
       </div>
       
       <div className="card">
-        <h3>🚀 Junte-se a Nós</h3>
+        <h3>{t('home.join_title')}</h3>
         <p>
-          Está procurando um clan ativo e acolhedor? Temos espaço para jogadores de todos os níveis! 
-          Entre em contato conosco através do Discord ou da seção de contato.
+          {t('home.join_text')}
         </p>
         <button className="btn" style={{marginTop: '1rem'}}>
-          Quero Fazer Parte!
+          {t('home.join_button')}
         </button>
       </div>
     </div>

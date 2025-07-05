@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 const Lobby = () => {
+  const { t } = useTranslation();
   const [activeLobbies] = useState([
     { id: 1, name: 'Arena Masters', host: 'SheepKing', players: 6, maxPlayers: 8, gameType: 'Ranked 1v1', map: 'Arena' },
     { id: 2, name: 'Clan War Training', host: 'WoolWarrior', players: 4, maxPlayers: 4, gameType: 'Team Game', map: 'Arabia' },
@@ -26,39 +28,39 @@ const Lobby = () => {
 
   return (
     <div className="page-container">
-      <h1 className="page-title">🎮 Lobby & Matchmaking</h1>
+      <h1 className="page-title">{t('lobby.title')}</h1>
       <p className="page-subtitle">
-        Encontre parceiros para suas batalhas épicas
+        {t('lobby.subtitle')}
       </p>
       
       <div className="card">
-        <h3>🎯 Matchmaking Rápido</h3>
-        <p>Encontre uma partida rapidamente com base no seu nível:</p>
+        <h3>{t('lobby.quick_matchmaking')}</h3>
+        <p>{t('lobby.quick_matchmaking_desc')}</p>
         <div style={{display: 'flex', gap: '1rem', marginTop: '1rem', flexWrap: 'wrap'}}>
-          <button className="btn">🔥 Ranked 1v1</button>
-          <button className="btn">👥 Team Game</button>
-          <button className="btn">⚡ Empire Wars</button>
-          <button className="btn">🎲 Random Map</button>
+          <button className="btn">{t('lobby.ranked_1v1')}</button>
+          <button className="btn">{t('lobby.team_game')}</button>
+          <button className="btn">{t('lobby.empire_wars')}</button>
+          <button className="btn">{t('lobby.random_map')}</button>
         </div>
       </div>
       
       <div className="card">
         <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem'}}>
-          <h3>🏛️ Salas Ativas</h3>
+          <h3>{t('lobby.active_rooms_title')}</h3>
           <button 
             className="btn-secondary btn"
             onClick={() => setShowCreateLobby(!showCreateLobby)}
           >
-            {showCreateLobby ? 'Cancelar' : 'Criar Sala'}
+            {showCreateLobby ? t('lobby.cancel') : t('lobby.create_room')}
           </button>
         </div>
         
         {showCreateLobby && (
           <div style={{background: '#3a3a3a', padding: '1rem', borderRadius: '4px', marginBottom: '1rem'}}>
-            <h4 style={{color: '#d4af37', marginBottom: '0.5rem'}}>Criar Nova Sala</h4>
+            <h4 style={{color: '#d4af37', marginBottom: '0.5rem'}}>{t('lobby.create_new_room')}</h4>
             <input
               type="text"
-              placeholder="Nome da sala"
+              placeholder={t('lobby.room_name')}
               value={newLobbyName}
               onChange={(e) => setNewLobbyName(e.target.value)}
               style={{
@@ -72,8 +74,8 @@ const Lobby = () => {
               }}
             />
             <div style={{display: 'flex', gap: '1rem'}}>
-              <button className="btn">Criar Sala</button>
-              <button className="btn-secondary btn">Cancelar</button>
+              <button className="btn">{t('lobby.create_room')}</button>
+              <button className="btn-secondary btn">{t('lobby.cancel')}</button>
             </div>
           </div>
         )}
@@ -90,11 +92,11 @@ const Lobby = () => {
               color: '#e0e0e0'
             }}
           >
-            <option value="all">Todos os Tipos</option>
-            <option value="ranked">Ranked</option>
-            <option value="team">Team Game</option>
-            <option value="unranked">Unranked</option>
-            <option value="custom">Custom</option>
+            <option value="all">{t('lobby.all_types')}</option>
+            <option value="ranked">{t('lobby.ranked')}</option>
+            <option value="team">{t('lobby.team')}</option>
+            <option value="unranked">{t('lobby.unranked')}</option>
+            <option value="custom">{t('lobby.custom')}</option>
           </select>
         </div>
         
@@ -105,18 +107,18 @@ const Lobby = () => {
                 <div>
                   <h4 style={{color: '#d4af37', marginBottom: '0.5rem'}}>{lobby.name}</h4>
                   <p style={{color: '#e0e0e0', marginBottom: '0.5rem'}}>
-                    <strong>Host:</strong> {lobby.host} | <strong>Mapa:</strong> {lobby.map}
+                    <strong>{t('lobby.host')}</strong> {lobby.host} | <strong>{t('lobby.map')}</strong> {lobby.map}
                   </p>
                   <p style={{color: '#e0e0e0', marginBottom: '0.5rem'}}>
-                    <strong>Tipo:</strong> {lobby.gameType}
+                    <strong>{t('lobby.type')}</strong> {lobby.gameType}
                   </p>
                   <p style={{color: getStatusColor(lobby.players, lobby.maxPlayers), fontWeight: 'bold'}}>
-                    {lobby.players}/{lobby.maxPlayers} jogadores
+                    {lobby.players}/{lobby.maxPlayers} {t('lobby.players')}
                   </p>
                 </div>
                 <div style={{display: 'flex', gap: '0.5rem'}}>
                   <button className="btn" style={{fontSize: '0.9rem'}}>
-                    {lobby.players >= lobby.maxPlayers ? 'Assistir' : 'Entrar'}
+                    {lobby.players >= lobby.maxPlayers ? t('lobby.watch') : t('lobby.enter')}
                   </button>
                 </div>
               </div>
@@ -126,12 +128,12 @@ const Lobby = () => {
       </div>
       
       <div className="card">
-        <h3>📋 Dicas para Matchmaking</h3>
+        <h3>{t('lobby.matchmaking_tips')}</h3>
         <p>
-          • <strong>Comunique-se:</strong> Use o chat para coordenar estratégias<br/>
-          • <strong>Seja respeitoso:</strong> Mantenha o fair play sempre<br/>
-          • <strong>Pratique:</strong> Use partidas não ranqueadas para testar builds<br/>
-          • <strong>Ajude iniciantes:</strong> Compartilhe seu conhecimento
+          • <strong>{t('lobby.tip_communicate')}</strong> {t('lobby.tip_communicate_desc')}<br/>
+          • <strong>{t('lobby.tip_respectful')}</strong> {t('lobby.tip_respectful_desc')}<br/>
+          • <strong>{t('lobby.tip_practice')}</strong> {t('lobby.tip_practice_desc')}<br/>
+          • <strong>{t('lobby.tip_help')}</strong> {t('lobby.tip_help_desc')}
         </p>
       </div>
     </div>

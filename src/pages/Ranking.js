@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import aoeApi from '../services/aoeApi';
+import { useTranslation } from 'react-i18next';
 
 const Ranking = () => {
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [rankingData, setRankingData] = useState({
@@ -14,6 +16,7 @@ const Ranking = () => {
   const [showOnlyFs, setShowOnlyFs] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [leaderboards, setLeaderboards] = useState([]);
+  const [activeTab, setActiveTab] = useState('clan'); // 'clan' ou 'geral'
 
   // Mapeamento de IDs de leaderboard para nomes
   const leaderboardNames = {
@@ -68,7 +71,7 @@ const Ranking = () => {
   };
 
   const getDisplayPlayers = () => {
-    let players = showOnlyFs ? rankingData.fsPlayers : rankingData.allPlayers;
+    let players = activeTab === 'clan' ? rankingData.fsPlayers : rankingData.allPlayers;
     
     if (searchTerm) {
       const searchLower = searchTerm.toLowerCase();
@@ -89,11 +92,11 @@ const Ranking = () => {
   if (loading) {
     return (
       <div className="page-container">
-        <h1 className="page-title">🏆 Ranking do Clan</h1>
+        <h1 className="page-title">{t('ranking.title')}</h1>
         <div className="card">
           <div style={{textAlign: 'center', padding: '2rem'}}>
             <div style={{fontSize: '2rem', marginBottom: '1rem'}}>⏳</div>
-            <p>Carregando dados do ranking...</p>
+            <p>{t('common.loading')}</p>
           </div>
         </div>
       </div>
@@ -103,13 +106,13 @@ const Ranking = () => {
   if (error) {
     return (
       <div className="page-container">
-        <h1 className="page-title">🏆 Ranking do Clan</h1>
+        <h1 className="page-title">{t('ranking.title')}</h1>
         <div className="card">
           <div style={{textAlign: 'center', padding: '2rem'}}>
             <div style={{fontSize: '2rem', marginBottom: '1rem'}}>❌</div>
             <p>{error}</p>
             <button className="btn" onClick={handleRefresh}>
-              🔄 Tentar Novamente
+              {t('ranking.refresh')}
             </button>
           </div>
         </div>
@@ -121,17 +124,33 @@ const Ranking = () => {
 
   return (
     <div className="page-container">
-      <h1 className="page-title">🏆 Ranking do Clan</h1>
-      <p className="page-subtitle">
-        Classificação dos nossos melhores guerreiros - Dados em tempo real
-      </p>
+      <h1 className="page-title">{t('ranking.title')}</h1>
+      <p className="page-subtitle">{t('ranking.subtitle')}</p>
+      
+      {/* Abas para alternar entre Clan e Geral */}
+      <div style={{ display: 'flex', gap: '1rem', marginBottom: '1rem' }}>
+        <button
+          className={`btn ${activeTab === 'clan' ? 'active' : ''}`}
+          style={{ background: activeTab === 'clan' ? '#d4af37' : '#222', color: activeTab === 'clan' ? '#222' : '#d4af37', fontWeight: 'bold', borderRadius: 8, padding: '0.5rem 1.5rem', border: 'none', cursor: 'pointer' }}
+          onClick={() => setActiveTab('clan')}
+        >
+          {t('ranking.tab_clan')}
+        </button>
+        <button
+          className={`btn ${activeTab === 'geral' ? 'active' : ''}`}
+          style={{ background: activeTab === 'geral' ? '#d4af37' : '#222', color: activeTab === 'geral' ? '#222' : '#d4af37', fontWeight: 'bold', borderRadius: 8, padding: '0.5rem 1.5rem', border: 'none', cursor: 'pointer' }}
+          onClick={() => setActiveTab('geral')}
+        >
+          {t('ranking.tab_geral')}
+        </button>
+      </div>
       
       {/* Controles */}
       <div className="card">
-        <h3>🎛️ Controles</h3>
+        <h3>{t('ranking.controls')}</h3>
         <div style={{display: 'flex', gap: '1rem', flexWrap: 'wrap', alignItems: 'center'}}>
           <div>
-            <label style={{color: '#d4af37', marginRight: '0.5rem'}}>Tipo de Ranking:</label>
+            <label style={{color: '#d4af37', marginRight: '0.5rem'}}>{t('ranking.type_label')}</label>
             <select 
               value={selectedLeaderboard} 
               onChange={(e) => setSelectedLeaderboard(Number(e.target.value))}
@@ -143,10 +162,10 @@ const Ranking = () => {
                 color: '#e0e0e0'
               }}
             >
-              <option value={3}>1v1 Random Map</option>
-              <option value={4}>1v1 Empire Wars</option>
-              <option value={13}>Team Random Map</option>
-              <option value={14}>Team Empire Wars</option>
+              <option value={3}>{leaderboardNames[3]}</option>
+              <option value={4}>{leaderboardNames[4]}</option>
+              <option value={13}>{leaderboardNames[13]}</option>
+              <option value={14}>{leaderboardNames[14]}</option>
             </select>
           </div>
           
@@ -158,14 +177,14 @@ const Ranking = () => {
                 onChange={(e) => setShowOnlyFs(e.target.checked)}
                 style={{marginRight: '0.5rem'}}
               />
-              Mostrar apenas Fs.
+              {t('ranking.show_fs')}
             </label>
           </div>
           
           <div>
             <input 
               type="text" 
-              placeholder="Buscar jogador..."
+              placeholder={t('ranking.search_placeholder')}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               style={{
@@ -180,7 +199,7 @@ const Ranking = () => {
           </div>
           
           <button className="btn" onClick={handleRefresh}>
-            🔄 Atualizar
+            {t('ranking.refresh')}
           </button>
         </div>
         
@@ -189,33 +208,32 @@ const Ranking = () => {
       
       {/* Estatísticas */}
       <div className="card">
-        <h3>📊 Estatísticas Gerais</h3>
+        <h3>{t('ranking.stats_title')}</h3>
         <p>
-          <strong>Total de Jogadores:</strong> {rankingData.totalPlayers.toLocaleString()}<br/>
-          <strong>Jogadores Fs.:</strong> {rankingData.totalFsPlayers}<br/>
-          <strong>Mostrando:</strong> {displayPlayers.length} jogadores<br/>
-          <strong>Tipo:</strong> {leaderboardNames[selectedLeaderboard]}
+          <strong>{t('ranking.total_players')}:</strong> {activeTab === 'clan' ? rankingData.totalFsPlayers : rankingData.totalPlayers}<br/>
+          <strong>{t('ranking.showing')}:</strong> {displayPlayers.length} {t('ranking.player')}<br/>
+          <strong>{t('ranking.type')}:</strong> {leaderboardNames[selectedLeaderboard]}
         </p>
       </div>
       
       {/* Tabela de Classificação */}
       <div className="card">
-        <h3>🎯 Tabela de Classificação</h3>
+        <h3>{t('ranking.table_title')}</h3>
         {displayPlayers.length === 0 ? (
           <p style={{textAlign: 'center', padding: '2rem', color: '#e0e0e0'}}>
-            {searchTerm ? 'Nenhum jogador encontrado com esse nome.' : 'Nenhum jogador encontrado.'}
+            {searchTerm ? t('ranking.no_players_search') : t('ranking.no_players')}
           </p>
         ) : (
           <div style={{overflowX: 'auto'}}>
             <table style={{width: '100%', borderCollapse: 'collapse', marginTop: '1rem'}}>
               <thead>
                 <tr style={{borderBottom: '2px solid #d4af37'}}>
-                  <th style={{padding: '1rem', textAlign: 'left', color: '#d4af37'}}>Pos</th>
-                  <th style={{padding: '1rem', textAlign: 'left', color: '#d4af37'}}>Jogador</th>
-                  <th style={{padding: '1rem', textAlign: 'center', color: '#d4af37'}}>ELO</th>
-                  <th style={{padding: '1rem', textAlign: 'center', color: '#d4af37'}}>Jogos</th>
-                  <th style={{padding: '1rem', textAlign: 'center', color: '#d4af37'}}>Vitórias</th>
-                  <th style={{padding: '1rem', textAlign: 'center', color: '#d4af37'}}>Taxa de Vitória</th>
+                  <th style={{padding: '1rem', textAlign: 'left', color: '#d4af37'}}>{t('ranking.pos')}</th>
+                  <th style={{padding: '1rem', textAlign: 'left', color: '#d4af37'}}>{t('ranking.player')}</th>
+                  <th style={{padding: '1rem', textAlign: 'center', color: '#d4af37'}}>{t('ranking.elo')}</th>
+                  <th style={{padding: '1rem', textAlign: 'center', color: '#d4af37'}}>{t('ranking.games')}</th>
+                  <th style={{padding: '1rem', textAlign: 'center', color: '#d4af37'}}>{t('ranking.wins')}</th>
+                  <th style={{padding: '1rem', textAlign: 'center', color: '#d4af37'}}>{t('ranking.winrate')}</th>
                 </tr>
               </thead>
               <tbody>
@@ -266,27 +284,29 @@ const Ranking = () => {
       </div>
       
       {/* Conquistas */}
-      <div className="card">
-        <h3>🎖️ Destaques Fs.</h3>
-        {rankingData.fsPlayers.length > 0 ? (
-          <div>
-            {rankingData.fsPlayers.slice(0, 3).map((player, index) => {
-              const winRate = player.games > 0 ? ((player.wins / player.games) * 100).toFixed(1) : '0.0';
-              return (
-                <p key={player.profileId || index}>
-                  {index === 0 ? '🥇' : index === 1 ? '🥈' : '🥉'} 
-                  <strong>{formatPlayerName(player.name || player.profileName)}</strong> - 
-                  ELO: {player.rating || 'N/A'} | 
-                  Jogos: {player.games || 'N/A'} | 
-                  Taxa de Vitória: {winRate}%
-                </p>
-              );
-            })}
-          </div>
-        ) : (
-          <p>Nenhum jogador Fs. encontrado no ranking atual.</p>
-        )}
-      </div>
+      {activeTab === 'clan' && (
+        <div className="card">
+          <h3>{t('ranking.highlights')}</h3>
+          {rankingData.fsPlayers.length > 0 ? (
+            <div>
+              {rankingData.fsPlayers.slice(0, 3).map((player, index) => {
+                const winRate = player.games > 0 ? ((player.wins / player.games) * 100).toFixed(1) : '0.0';
+                return (
+                  <p key={player.profileId || index}>
+                    {index === 0 ? '🥇' : index === 1 ? '🥈' : '🥉'} 
+                    <strong>{formatPlayerName(player.name || player.profileName)}</strong> - 
+                    ELO: {player.rating || 'N/A'} | 
+                    {t('ranking.games')}: {player.games || 'N/A'} | 
+                    {t('ranking.winrate')}: {winRate}%
+                  </p>
+                );
+              })}
+            </div>
+          ) : (
+            <p>{t('ranking.no_fs')}</p>
+          )}
+        </div>
+      )}
     </div>
   );
 };

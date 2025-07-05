@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 const Contact = () => {
+  const { t } = useTranslation();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -82,9 +84,9 @@ const Contact = () => {
 
   return (
     <div className="page-container">
-      <h1 className="page-title">📞 Contato</h1>
+      <h1 className="page-title">{t('contact.title')}</h1>
       <p className="page-subtitle">
-        Entre em contato conosco - estamos aqui para ajudar!
+        {t('contact.subtitle')}
       </p>
       
       <div className="card">

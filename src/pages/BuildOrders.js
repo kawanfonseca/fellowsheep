@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 const BuildOrders = () => {
+  const { t } = useTranslation();
   const [buildOrders] = useState([
     {
       id: 1,
@@ -143,9 +145,9 @@ const BuildOrders = () => {
 
   return (
     <div className="page-container">
-      <h1 className="page-title">📜 Build Orders</h1>
+      <h1 className="page-title">{t('build_orders.title')}</h1>
       <p className="page-subtitle">
-        Biblioteca completa de estratégias e ordens de construção
+        {t('build_orders.subtitle')}
       </p>
       
       <div className="card">

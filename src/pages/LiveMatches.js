@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
 
 const LiveMatches = () => {
+  const { t } = useTranslation();
   const [liveMatches, setLiveMatches] = useState([
     {
       id: 1,
@@ -85,9 +87,9 @@ const LiveMatches = () => {
 
   return (
     <div className="page-container">
-      <h1 className="page-title">🔴 Partidas Ao Vivo</h1>
+      <h1 className="page-title">{t('live_matches.title')}</h1>
       <p className="page-subtitle">
-        Acompanhe as batalhas épicas acontecendo agora
+        {t('live_matches.subtitle')}
       </p>
       
       <div className="card">

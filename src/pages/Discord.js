@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 const Discord = () => {
+  const { t } = useTranslation();
   const [discordStats] = useState({
     totalMembers: 89,
     onlineMembers: 34,
@@ -67,9 +69,9 @@ const Discord = () => {
 
   return (
     <div className="page-container">
-      <h1 className="page-title">💬 Discord - Fellowsheep Gaming</h1>
+      <h1 className="page-title">{t('discord.title')} - Fellowsheep Gaming</h1>
       <p className="page-subtitle">
-        Nosso centro de comunicação e comunidade
+        {t('discord.description')}
       </p>
       
       <div className="card">

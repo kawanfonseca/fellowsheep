@@ -14,8 +14,10 @@
     "start": "npm run dev:full"
   },
   "dependencies": {
+    "i18next": "^25.3.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-i18next": "^15.6.0",
     "react-router-dom": "^6.8.0"
   },
   "devDependencies": {
@@ -29,4 +31,4 @@
     "eslint-plugin-react-refresh": "^0.4.5",
     "vite": "^5.0.8"
   }
-} 
+}

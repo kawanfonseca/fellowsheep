@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 const Donations = () => {
+  const { t } = useTranslation();
   const [donationGoals] = useState([
     {
       id: 1,
@@ -69,9 +71,9 @@ const Donations = () => {
 
   return (
     <div className="page-container">
-      <h1 className="page-title">💰 Doações & Apoio</h1>
+      <h1 className="page-title">{t('donations.title')}</h1>
       <p className="page-subtitle">
-        Ajude-nos a manter e melhorar nossa comunidade
+        {t('donations.subtitle')}
       </p>
       
       <div className="card">

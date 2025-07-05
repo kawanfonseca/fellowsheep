@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 const RecentMatches = () => {
+  const { t } = useTranslation();
   const [recentMatches] = useState([
     {
       id: 1,
@@ -79,29 +81,29 @@ const RecentMatches = () => {
 
   return (
     <div className="page-container">
-      <h1 className="page-title">📊 Partidas Recentes</h1>
+      <h1 className="page-title">{t('recent_matches.title')}</h1>
       <p className="page-subtitle">
-        Histórico das últimas batalhas dos membros do clan
+        {t('recent_matches.subtitle')}
       </p>
       
       <div className="card">
-        <h3>📈 Estatísticas das Últimas 24h</h3>
+        <h3>{t('recent_matches.stats_24h')}</h3>
         <div style={{display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem'}}>
           <div style={{textAlign: 'center'}}>
             <div style={{fontSize: '2rem', color: '#d4af37', fontWeight: 'bold'}}>23</div>
-            <div style={{color: '#e0e0e0'}}>Partidas Jogadas</div>
+            <div style={{color: '#e0e0e0'}}>{t('recent_matches.matches_played')}</div>
           </div>
           <div style={{textAlign: 'center'}}>
             <div style={{fontSize: '2rem', color: '#6bcf7f', fontWeight: 'bold'}}>67%</div>
-            <div style={{color: '#e0e0e0'}}>Taxa de Vitória</div>
+            <div style={{color: '#e0e0e0'}}>{t('recent_matches.win_rate')}</div>
           </div>
           <div style={{textAlign: 'center'}}>
             <div style={{fontSize: '2rem', color: '#ffd93d', fontWeight: 'bold'}}>38min</div>
-            <div style={{color: '#e0e0e0'}}>Duração Média</div>
+            <div style={{color: '#e0e0e0'}}>{t('recent_matches.avg_duration')}</div>
           </div>
           <div style={{textAlign: 'center'}}>
             <div style={{fontSize: '2rem', color: '#74c0fc', fontWeight: 'bold'}}>+127</div>
-            <div style={{color: '#e0e0e0'}}>ELO Total Ganho</div>
+            <div style={{color: '#e0e0e0'}}>{t('recent_matches.total_elo_gained')}</div>
           </div>
         </div>
       </div>

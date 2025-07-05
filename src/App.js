@@ -4,6 +4,7 @@ import './App.css';
 
 // Importar componentes
 import Header from './components/Header';
+import LanguageSelector from './components/LanguageSelector';
 import Home from './pages/Home';
 import Ranking from './pages/Ranking';
 import Lobby from './pages/Lobby';
@@ -25,6 +26,7 @@ function App() {
   return (
     <Router>
       <div className="App">
+        <LanguageSelector />
         <Header onNavigate={handleNavigation} currentPage={currentPage} />
         <main className="main-content">
           <Routes>
