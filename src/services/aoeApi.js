@@ -44,7 +44,32 @@ class AoeApiService {
   constructor() {
     this.cache = new Map();
     this.cacheTimeout = 5 * 60 * 1000; // 5 minutos
-    this.useMockData = false; // Tentar API real primeiro, fallback para mock se CORS falhar
+    this.backendAvailable = false;
+    this.checkBackendAvailability();
+  }
+
+  // Verificar se o backend está disponível
+  async checkBackendAvailability() {
+    try {
+      const response = await fetch(`${API_BASE_URL}/health`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        timeout: 5000
+      });
+      
+      if (response.ok) {
+        this.backendAvailable = true;
+        console.log('✅ Backend disponível:', API_BASE_URL);
+      } else {
+        this.backendAvailable = false;
+        console.log('❌ Backend não disponível, usando dados mockados');
+      }
+    } catch (error) {
+      this.backendAvailable = false;
+      console.log('❌ Erro ao conectar com backend, usando dados mockados:', error.message);
+    }
   }
 
   // Verificar se o cache ainda é válido
@@ -67,6 +92,12 @@ class AoeApiService {
       return this.cache.get(cacheKey).data;
     }
 
+    if (!this.backendAvailable) {
+      console.log('📊 Usando dados mockados para leaderboards');
+      await this.simulateNetworkDelay();
+      return MOCK_DATA.leaderboards;
+    }
+
     try {
       const response = await fetch(`${API_BASE_URL}/api/leaderboards`);
       const data = await response.json();
@@ -78,8 +109,9 @@ class AoeApiService {
       
       return data;
     } catch (error) {
-      console.error('Erro ao buscar leaderboards disponíveis (usando fallback):', error);
-      // Fallback para dados mockados em caso de erro (CORS ou outros)
+      console.error('❌ Erro ao buscar leaderboards (usando fallback):', error);
+      // Fallback para dados mockados em caso de erro
+      await this.simulateNetworkDelay();
       return MOCK_DATA.leaderboards;
     }
   }
@@ -90,6 +122,32 @@ class AoeApiService {
     
     if (this.isCacheValid(cacheKey)) {
       return this.cache.get(cacheKey).data;
+    }
+
+    if (!this.backendAvailable) {
+      console.log('📊 Usando dados mockados para ranking');
+      await this.simulateNetworkDelay();
+      let players = [...MOCK_DATA.players];
+      
+      // Adicionar variação baseada no leaderboard ID
+      if (leaderboardId === 4) { // Empire Wars
+        players = players.map(p => ({ ...p, rating: p.rating + Math.floor(Math.random() * 100) - 50 }));
+      } else if (leaderboardId === 13) { // Team
+        players = players.map(p => ({ ...p, rating: p.rating + Math.floor(Math.random() * 50) - 25 }));
+      }
+      
+      // Ordenar por rating
+      players.sort((a, b) => b.rating - a.rating);
+      
+      // Aplicar paginação
+      const paginatedPlayers = players.slice(start, start + count);
+      
+      this.cache.set(cacheKey, {
+        data: paginatedPlayers,
+        timestamp: Date.now()
+      });
+      
+      return paginatedPlayers;
     }
 
     try {
@@ -105,8 +163,8 @@ class AoeApiService {
       
       return data;
     } catch (error) {
-      console.error('Erro ao buscar ranking (usando fallback):', error);
-      // Fallback para dados mockados em caso de erro (CORS ou outros)
+      console.error('❌ Erro ao buscar ranking (usando fallback):', error);
+      // Fallback para dados mockados em caso de erro
       await this.simulateNetworkDelay();
       let players = [...MOCK_DATA.players];
       
@@ -142,6 +200,30 @@ class AoeApiService {
       return this.cache.get(cacheKey).data;
     }
 
+    if (!this.backendAvailable) {
+      console.log('📊 Usando dados mockados para estatísticas pessoais');
+      await this.simulateNetworkDelay();
+      const stats = profileIds.map(id => {
+        const player = MOCK_DATA.players.find(p => p.profileId === id);
+        return player ? {
+          profileId: player.profileId,
+          name: player.name,
+          rating: player.rating,
+          games: player.games,
+          wins: player.wins,
+          losses: player.games - player.wins,
+          winRate: ((player.wins / player.games) * 100).toFixed(1)
+        } : null;
+      }).filter(Boolean);
+      
+      this.cache.set(cacheKey, {
+        data: stats,
+        timestamp: Date.now()
+      });
+      
+      return stats;
+    }
+
     try {
       const response = await fetch(
         `${API_BASE_URL}/api/player/stats?profile_ids=${profileIds.join(',')}`
@@ -155,8 +237,8 @@ class AoeApiService {
       
       return data;
     } catch (error) {
-      console.error('Erro ao buscar estatísticas pessoais (usando fallback):', error);
-      // Fallback para dados mockados em caso de erro (CORS ou outros)
+      console.error('❌ Erro ao buscar estatísticas pessoais (usando fallback):', error);
+      // Fallback para dados mockados em caso de erro
       await this.simulateNetworkDelay();
       const stats = profileIds.map(id => {
         const player = MOCK_DATA.players.find(p => p.profileId === id);
@@ -203,13 +285,25 @@ class AoeApiService {
         totalPlayers: allPlayers.length
       };
     } catch (error) {
-      console.error('Erro ao buscar ranking Fs.:', error);
+      console.error('❌ Erro ao buscar ranking Fs.:', error);
       throw error;
     }
   }
 
   // Buscar jogador por nome
   async searchPlayerByName(searchTerm, leaderboardId = 3) {
+    if (!this.backendAvailable) {
+      console.log('📊 Usando busca local para jogador por nome');
+      await this.simulateNetworkDelay();
+      const allPlayers = await this.getLeaderboard(leaderboardId, 0, 1000);
+      const searchLower = searchTerm.toLowerCase();
+      
+      return allPlayers.filter(player => {
+        const name = player.name || player.profileName || '';
+        return name.toLowerCase().includes(searchLower);
+      });
+    }
+
     try {
       const response = await fetch(
         `${API_BASE_URL}/api/search/player?name=${encodeURIComponent(searchTerm)}&leaderboard_id=${leaderboardId}`
@@ -217,7 +311,7 @@ class AoeApiService {
       const data = await response.json();
       return data;
     } catch (error) {
-      console.error('Erro ao buscar jogador:', error);
+      console.error('❌ Erro ao buscar jogador (usando fallback):', error);
       // Fallback para busca local
       const allPlayers = await this.getLeaderboard(leaderboardId, 0, 1000);
       const searchLower = searchTerm.toLowerCase();
