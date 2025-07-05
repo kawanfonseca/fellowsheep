@@ -41,7 +41,7 @@ class AoeApiService {
   constructor() {
     this.cache = new Map();
     this.cacheTimeout = 5 * 60 * 1000; // 5 minutos
-    this.useMockData = false; // Usar API real
+    this.useMockData = false; // Tentar API real primeiro, fallback para mock se CORS falhar
   }
 
   // Verificar se o cache ainda é válido
@@ -65,18 +65,6 @@ class AoeApiService {
     }
 
     try {
-      if (this.useMockData) {
-        await this.simulateNetworkDelay();
-        const data = MOCK_DATA.leaderboards;
-        
-        this.cache.set(cacheKey, {
-          data,
-          timestamp: Date.now()
-        });
-        
-        return data;
-      }
-
       const response = await fetch(`${API_BASE_URL}/community/leaderboard/getAvailableLeaderboards?title=age2`);
       const data = await response.json();
       
@@ -87,8 +75,8 @@ class AoeApiService {
       
       return data;
     } catch (error) {
-      console.error('Erro ao buscar leaderboards disponíveis:', error);
-      // Fallback para dados mockados em caso de erro
+      console.error('Erro ao buscar leaderboards disponíveis (usando fallback):', error);
+      // Fallback para dados mockados em caso de erro (CORS ou outros)
       return MOCK_DATA.leaderboards;
     }
   }
@@ -102,32 +90,6 @@ class AoeApiService {
     }
 
     try {
-      if (this.useMockData) {
-        await this.simulateNetworkDelay();
-        // Simular diferentes rankings baseados no ID
-        let players = [...MOCK_DATA.players];
-        
-        // Adicionar variação baseada no leaderboard ID
-        if (leaderboardId === 4) { // Empire Wars
-          players = players.map(p => ({ ...p, rating: p.rating + Math.floor(Math.random() * 100) - 50 }));
-        } else if (leaderboardId === 13) { // Team
-          players = players.map(p => ({ ...p, rating: p.rating + Math.floor(Math.random() * 50) - 25 }));
-        }
-        
-        // Ordenar por rating
-        players.sort((a, b) => b.rating - a.rating);
-        
-        // Aplicar paginação
-        const paginatedPlayers = players.slice(start, start + count);
-        
-        this.cache.set(cacheKey, {
-          data: paginatedPlayers,
-          timestamp: Date.now()
-        });
-        
-        return paginatedPlayers;
-      }
-
       const response = await fetch(
         `${API_BASE_URL}/community/leaderboard/getLeaderboard2?title=age2&leaderboard_id=${leaderboardId}&start=${start}&count=${count}&sortBy=1`
       );
@@ -140,9 +102,30 @@ class AoeApiService {
       
       return data;
     } catch (error) {
-      console.error('Erro ao buscar ranking:', error);
-      // Fallback para dados mockados em caso de erro
-      return MOCK_DATA.players.slice(start, start + count);
+      console.error('Erro ao buscar ranking (usando fallback):', error);
+      // Fallback para dados mockados em caso de erro (CORS ou outros)
+      await this.simulateNetworkDelay();
+      let players = [...MOCK_DATA.players];
+      
+      // Adicionar variação baseada no leaderboard ID
+      if (leaderboardId === 4) { // Empire Wars
+        players = players.map(p => ({ ...p, rating: p.rating + Math.floor(Math.random() * 100) - 50 }));
+      } else if (leaderboardId === 13) { // Team
+        players = players.map(p => ({ ...p, rating: p.rating + Math.floor(Math.random() * 50) - 25 }));
+      }
+      
+      // Ordenar por rating
+      players.sort((a, b) => b.rating - a.rating);
+      
+      // Aplicar paginação
+      const paginatedPlayers = players.slice(start, start + count);
+      
+      this.cache.set(cacheKey, {
+        data: paginatedPlayers,
+        timestamp: Date.now()
+      });
+      
+      return paginatedPlayers;
     }
   }
 
@@ -157,29 +140,6 @@ class AoeApiService {
     }
 
     try {
-      if (this.useMockData) {
-        await this.simulateNetworkDelay();
-        const stats = profileIds.map(id => {
-          const player = MOCK_DATA.players.find(p => p.profileId === id);
-          return player ? {
-            profileId: player.profileId,
-            name: player.name,
-            rating: player.rating,
-            games: player.games,
-            wins: player.wins,
-            losses: player.games - player.wins,
-            winRate: ((player.wins / player.games) * 100).toFixed(1)
-          } : null;
-        }).filter(Boolean);
-        
-        this.cache.set(cacheKey, {
-          data: stats,
-          timestamp: Date.now()
-        });
-        
-        return stats;
-      }
-
       const response = await fetch(
         `${API_BASE_URL}/community/leaderboard/GetPersonalStat?title=age2&profile_ids=[${profileIds.join(',')}]`
       );
@@ -192,8 +152,28 @@ class AoeApiService {
       
       return data;
     } catch (error) {
-      console.error('Erro ao buscar estatísticas pessoais:', error);
-      throw error;
+      console.error('Erro ao buscar estatísticas pessoais (usando fallback):', error);
+      // Fallback para dados mockados em caso de erro (CORS ou outros)
+      await this.simulateNetworkDelay();
+      const stats = profileIds.map(id => {
+        const player = MOCK_DATA.players.find(p => p.profileId === id);
+        return player ? {
+          profileId: player.profileId,
+          name: player.name,
+          rating: player.rating,
+          games: player.games,
+          wins: player.wins,
+          losses: player.games - player.wins,
+          winRate: ((player.wins / player.games) * 100).toFixed(1)
+        } : null;
+      }).filter(Boolean);
+      
+      this.cache.set(cacheKey, {
+        data: stats,
+        timestamp: Date.now()
+      });
+      
+      return stats;
     }
   }
 
@@ -256,11 +236,7 @@ class AoeApiService {
     }
   }
 
-  // Alternar entre dados mockados e API real
-  toggleMockData(useMock = true) {
-    this.useMockData = useMock;
-    this.clearCache(); // Limpar cache ao alternar
-  }
+
 }
 
 export default new AoeApiService(); 
