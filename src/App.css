@@ -77,10 +77,9 @@
 
 .nav-button {
   background: none;
-  border: 2px solid #d4af37;
+  border: none;
   color: #d4af37;
   padding: 0.75rem 1.5rem;
-  border-radius: 50px;
   cursor: pointer;
   transition: all 0.3s ease;
   font-weight: 600;
@@ -92,17 +91,15 @@
 }
 
 .nav-button:hover {
-  background: #d4af37;
-  color: #1a1a1a;
+  background: rgba(212, 175, 55, 0.1);
+  color: #d4af37;
   transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(212, 175, 55, 0.3);
-  border-color: #d4af37;
 }
 
 .nav-button.active {
-  background: #d4af37;
-  color: #1a1a1a;
-  border-color: #d4af37;
+  background: rgba(212, 175, 55, 0.2);
+  color: #d4af37;
+  border-bottom: 2px solid #d4af37;
 }
 
 /* Dropdown styles */
@@ -299,10 +296,9 @@
   .mobile-menu-toggle {
     display: none;
     background: none;
-    border: 2px solid #d4af37;
+    border: none;
     color: #d4af37;
     padding: 0.5rem;
-    border-radius: 8px;
     cursor: pointer;
     font-size: 1.2rem;
   }
@@ -382,9 +378,9 @@
     width: 100%;
     justify-content: center;
     padding: 1.2rem;
-    border-radius: 12px;
     font-size: 1rem;
     min-height: 48px;
+    border: none;
   }
   
   .main-content {

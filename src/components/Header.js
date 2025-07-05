@@ -101,7 +101,7 @@ const Header = ({ onNavigate, currentPage }) => {
           
           <div className="dropdown">
             <button className="nav-button">
-              ℹ️ {t('navigation.contact')} ▼
+              {t('navigation.contact')} ▼
             </button>
             <div className="dropdown-content">
               <button onClick={() => handleNavClick('/donations', 'donations')}>
@@ -115,20 +115,20 @@ const Header = ({ onNavigate, currentPage }) => {
           
           <div className="dropdown">
             <button className="nav-button">
-              🌐 Mídias Sociais ▼
+              Mídias Sociais ▼
             </button>
             <div className="dropdown-content">
               <a href="https://twitter.com" target="_blank" rel="noopener noreferrer">
-                🐦 Twitter
+                Twitter
               </a>
               <a href="https://youtube.com" target="_blank" rel="noopener noreferrer">
-                📺 YouTube
+                YouTube
               </a>
               <a href="https://twitch.tv" target="_blank" rel="noopener noreferrer">
-                🎥 Twitch
+                Twitch
               </a>
               <a href="https://instagram.com" target="_blank" rel="noopener noreferrer">
-                📸 Instagram
+                Instagram
               </a>
             </div>
           </div>
