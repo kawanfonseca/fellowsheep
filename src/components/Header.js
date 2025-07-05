@@ -31,7 +31,7 @@ const Header = ({ onNavigate, currentPage }) => {
     <header className="header">
       <div className="header-content">
         <div className="logo">
-          <img src="/logo.png" alt="Fellowsheep Gaming" className="logo-image" />
+          <img src="/FS-logo.png" alt="Fellowsheep Gaming" className="logo-image" />
           <h1>Fellowsheep </h1>
         </div>
         <select

@@ -1,5 +1,7 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
+import LiveGames from '../components/LiveGames';
+import LiveStreams from '../components/LiveStreams';
 
 const Home = () => {
   const { t } = useTranslation();
@@ -10,6 +12,12 @@ const Home = () => {
       <p className="page-subtitle">
         {t('home.subtitle')}
       </p>
+      
+      {/* Seção de Jogos ao Vivo */}
+      <LiveGames />
+      
+      {/* Seção de Streams ao Vivo */}
+      <LiveStreams />
       
       <div className="card">
         <h3>{t('home.about_title')}</h3>

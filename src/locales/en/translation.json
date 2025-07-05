@@ -14,6 +14,12 @@
   "home": {
     "title": "Welcome to Fellowsheep Gaming",
     "subtitle": "The most epic Age of Empires 2 Definitive Edition clan",
+    "live_games": "Live Games",
+    "live_streams": "Live Streams",
+    "no_live_games": "No live games at the moment",
+    "no_live_streams": "No live streams at the moment",
+    "map": "Map",
+    "viewers": "viewers",
     "about_title": "🏰 About Us",
     "about_text": "We are a group of passionate Age of Empires 2 DE players, focused on growing together, sharing knowledge and dominating medieval battlefields. Our clan is dedicated to both beginner and veteran players.",
     "pillars_title": "⚔️ Our Pillars",
