@@ -184,18 +184,7 @@ const Ranking = () => {
           </button>
         </div>
         
-        {/* Aviso sobre dados mockados */}
-        <div style={{
-          marginTop: '1rem',
-          padding: '1rem',
-          backgroundColor: 'rgba(255, 193, 7, 0.1)',
-          border: '1px solid #ffc107',
-          borderRadius: '8px',
-          color: '#ffc107'
-        }}>
-          <strong>⚠️ Aviso:</strong> Devido a restrições de CORS, estamos usando dados simulados para demonstração. 
-          Quando o problema for resolvido, os dados reais da API do Age of Empires 2 DE serão carregados automaticamente.
-        </div>
+
       </div>
       
       {/* Estatísticas */}

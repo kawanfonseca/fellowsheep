@@ -1,6 +1,6 @@
 const API_BASE_URL = 'https://aoe-api.worldsedgelink.com';
 
-// Dados mockados para contornar o CORS
+// Dados mockados para fallback
 const MOCK_DATA = {
   leaderboards: [
     { id: 3, name: '1v1 Random Map' },
@@ -41,7 +41,7 @@ class AoeApiService {
   constructor() {
     this.cache = new Map();
     this.cacheTimeout = 5 * 60 * 1000; // 5 minutos
-    this.useMockData = true; // Usar dados mockados devido ao CORS
+    this.useMockData = false; // Usar API real
   }
 
   // Verificar se o cache ainda é válido
