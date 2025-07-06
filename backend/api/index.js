@@ -73,7 +73,14 @@ app.get('/api/leaderboards', async (req, res) => {
 app.get('/api/leaderboard/:leaderboardId', async (req, res) => {
   try {
     const { leaderboardId } = req.params;
-    const { start = 0, count = 1000, sort_by = 1 } = req.query;
+    let { start = 0, count = 1000, sort_by = 1 } = req.query;
+    // Garantir que todos os parâmetros são válidos
+    start = isNaN(parseInt(start)) ? 0 : parseInt(start);
+    count = isNaN(parseInt(count)) ? 1000 : parseInt(count);
+    const sortBy = isNaN(parseInt(sort_by)) ? 1 : parseInt(sort_by);
+    if (!leaderboardId) {
+      return res.status(400).json({ error: 'leaderboardId é obrigatório' });
+    }
     console.log(`🔍 Buscando ranking ${leaderboardId}...`);
     const response = await axios.get(
       `${AOE_API_BASE}/leaderboard/getLeaderBoard2`,
@@ -82,9 +89,9 @@ app.get('/api/leaderboard/:leaderboardId', async (req, res) => {
           title: 'age2',
           leaderboard_id: leaderboardId,
           platform: 'PC_STEAM',
-          start: parseInt(start),
-          count: parseInt(count),
-          sortBy: parseInt(sort_by)
+          start,
+          count,
+          sortBy
         },
         timeout: 30000
       }
