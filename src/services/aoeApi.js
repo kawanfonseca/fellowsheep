@@ -1,6 +1,6 @@
 // URL do backend local (pode ser alterada para produção)
 const API_BASE_URL = process.env.NODE_ENV === 'production' 
-  ? 'https://fellowsheep.vercel.app' 
+  ? '' // Em produção, usar rotas relativas para evitar CORS
   : 'http://localhost:8000';
 
 // Dados mockados para fallback
@@ -44,32 +44,7 @@ class AoeApiService {
   constructor() {
     this.cache = new Map();
     this.cacheTimeout = 5 * 60 * 1000; // 5 minutos
-    this.backendAvailable = true
-    // this.checkBackendAvailability();
-  }
-
-  // Verificar se o backend está disponível
-  async checkBackendAvailability() {
-    try {
-      const response = await fetch(`${API_BASE_URL}/api/health`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        timeout: 5000
-      });
-      
-      if (response.ok) {
-        this.backendAvailable = true;
-        console.log('✅ Backend disponível:', API_BASE_URL);
-      } else {
-        this.backendAvailable = false;
-        console.log('❌ Backend não disponível, usando dados mockados');
-      }
-    } catch (error) {
-      this.backendAvailable = false;
-      console.log('❌ Erro ao conectar com backend, usando dados mockados:', error.message);
-    }
+    this.backendAvailable = true; // Sempre assume backend disponível em produção
   }
 
   // Verificar se o cache ainda é válido
@@ -90,12 +65,6 @@ class AoeApiService {
     
     if (this.isCacheValid(cacheKey)) {
       return this.cache.get(cacheKey).data;
-    }
-
-    if (!this.backendAvailable) {
-      console.log('📊 Usando dados mockados para leaderboards');
-      await this.simulateNetworkDelay();
-      return MOCK_DATA.leaderboards;
     }
 
     try {
@@ -122,32 +91,6 @@ class AoeApiService {
     
     if (this.isCacheValid(cacheKey)) {
       return this.cache.get(cacheKey).data;
-    }
-
-    if (!this.backendAvailable) {
-      console.log('📊 Usando dados mockados para ranking');
-      await this.simulateNetworkDelay();
-      let players = [...MOCK_DATA.players];
-      
-      // Adicionar variação baseada no leaderboard ID
-      if (leaderboardId === 4) { // Empire Wars
-        players = players.map(p => ({ ...p, rating: p.rating + Math.floor(Math.random() * 100) - 50 }));
-      } else if (leaderboardId === 13) { // Team
-        players = players.map(p => ({ ...p, rating: p.rating + Math.floor(Math.random() * 50) - 25 }));
-      }
-      
-      // Ordenar por rating
-      players.sort((a, b) => b.rating - a.rating);
-      
-      // Aplicar paginação
-      const paginatedPlayers = players.slice(start, start + count);
-      
-      this.cache.set(cacheKey, {
-        data: paginatedPlayers,
-        timestamp: Date.now()
-      });
-      
-      return paginatedPlayers;
     }
 
     try {
@@ -198,30 +141,6 @@ class AoeApiService {
     
     if (this.isCacheValid(cacheKey)) {
       return this.cache.get(cacheKey).data;
-    }
-
-    if (!this.backendAvailable) {
-      console.log('📊 Usando dados mockados para estatísticas pessoais');
-      await this.simulateNetworkDelay();
-      const stats = profileIds.map(id => {
-        const player = MOCK_DATA.players.find(p => p.profileId === id);
-        return player ? {
-          profileId: player.profileId,
-          name: player.name,
-          rating: player.rating,
-          games: player.games,
-          wins: player.wins,
-          losses: player.games - player.wins,
-          winRate: ((player.wins / player.games) * 100).toFixed(1)
-        } : null;
-      }).filter(Boolean);
-      
-      this.cache.set(cacheKey, {
-        data: stats,
-        timestamp: Date.now()
-      });
-      
-      return stats;
     }
 
     try {
@@ -292,18 +211,6 @@ class AoeApiService {
 
   // Buscar jogador por nome
   async searchPlayerByName(searchTerm, leaderboardId = 3) {
-    if (!this.backendAvailable) {
-      console.log('📊 Usando busca local para jogador por nome');
-      await this.simulateNetworkDelay();
-      const allPlayers = await this.getLeaderboard(leaderboardId, 0, 1000);
-      const searchLower = searchTerm.toLowerCase();
-      
-      return allPlayers.filter(player => {
-        const name = player.name || player.profileName || '';
-        return name.toLowerCase().includes(searchLower);
-      });
-    }
-
     try {
               const response = await fetch(
           `${API_BASE_URL}/api/search/player?name=${encodeURIComponent(searchTerm)}&leaderboard_id=${leaderboardId}`
