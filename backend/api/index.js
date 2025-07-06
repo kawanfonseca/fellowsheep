@@ -75,11 +75,12 @@ app.get('/api/leaderboard/:leaderboardId', async (req, res) => {
     console.log(`🔍 Buscando ranking ${leaderboardId}...`);
     
     const response = await axios.get(
-      `${AOE_API_BASE}/community/leaderboard/getLeaderboard2`,
+      `${AOE_API_BASE}/leaderboard/getLeaderBoard2`,
       {
         params: {
           title: 'age2',
           leaderboard_id: leaderboardId,
+          platform: 'PC_STEAM',
           start: parseInt(start),
           count: parseInt(count),
           sortBy: parseInt(sort_by)
