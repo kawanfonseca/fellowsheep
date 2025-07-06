@@ -44,7 +44,7 @@ class AoeApiService {
   constructor() {
     this.cache = new Map();
     this.cacheTimeout = 5 * 60 * 1000; // 5 minutos
-    this.backendAvailable = false;
+    this.backendAvailable = true
     // this.checkBackendAvailability();
   }
 
