@@ -36,7 +36,6 @@ app.get('/', (req, res) => {
     status: 'running',
     api_base: AOE_API_BASE,
     endpoints: {
-      // health: '/api/health',
       leaderboards: '/api/leaderboards',
       leaderboard: '/api/leaderboard/:id',
       player_stats: '/api/player/stats',

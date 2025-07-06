@@ -45,7 +45,7 @@ class AoeApiService {
     this.cache = new Map();
     this.cacheTimeout = 5 * 60 * 1000; // 5 minutos
     this.backendAvailable = false;
-    this.checkBackendAvailability();
+    // this.checkBackendAvailability();
   }
 
   // Verificar se o backend está disponível
