@@ -7,7 +7,7 @@ const app = express();
 const PORT = process.env.PORT || 8000;
 
 // URL base da API do Age of Empires 2 DE
-const AOE_API_BASE = 'https://aoe-api.worldsedgelink.com';
+const AOE_API_BASE = 'https://aoe-api.worldsedgelink.com/community';
 
 // Configurar CORS
 app.use(cors({
