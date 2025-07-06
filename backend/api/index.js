@@ -49,12 +49,16 @@ app.get('/', (req, res) => {
 app.get('/api/leaderboards', async (req, res) => {
   try {
     console.log('🔍 Buscando leaderboards disponíveis...');
-    
     const response = await axios.get(
-      `${AOE_API_BASE}/community/leaderboard/getAvailableLeaderboards?title=age2`,
-      { timeout: 30000 }
+      `${AOE_API_BASE}/leaderboard/getAvailableLeaderboards`,
+      {
+        params: {
+          title: 'age2',
+          platform: 'PC_STEAM'
+        },
+        timeout: 30000
+      }
     );
-    
     console.log('✅ Leaderboards carregados com sucesso');
     res.json(response.data);
   } catch (error) {
@@ -71,9 +75,7 @@ app.get('/api/leaderboard/:leaderboardId', async (req, res) => {
   try {
     const { leaderboardId } = req.params;
     const { start = 0, count = 1000, sort_by = 1 } = req.query;
-    
     console.log(`🔍 Buscando ranking ${leaderboardId}...`);
-    
     const response = await axios.get(
       `${AOE_API_BASE}/leaderboard/getLeaderBoard2`,
       {
@@ -88,7 +90,6 @@ app.get('/api/leaderboard/:leaderboardId', async (req, res) => {
         timeout: 30000
       }
     );
-    
     console.log(`✅ Ranking ${leaderboardId} carregado com sucesso`);
     res.json(response.data);
   } catch (error) {
@@ -139,22 +140,20 @@ app.get('/api/player/stats', async (req, res) => {
 app.get('/api/search/player', async (req, res) => {
   try {
     const { name, leaderboard_id = 3 } = req.query;
-    
     if (!name) {
       return res.status(400).json({
         error: 'name é obrigatório'
       });
     }
-    
     console.log(`🔍 Buscando jogador: ${name} no ranking ${leaderboard_id}`);
-    
-    // Primeiro buscar o ranking completo
+    // Buscar o ranking completo
     const response = await axios.get(
-      `${AOE_API_BASE}/community/leaderboard/getLeaderboard2`,
+      `${AOE_API_BASE}/leaderboard/getLeaderBoard2`,
       {
         params: {
           title: 'age2',
           leaderboard_id: parseInt(leaderboard_id),
+          platform: 'PC_STEAM',
           start: 0,
           count: 1000,
           sortBy: 1
@@ -162,14 +161,12 @@ app.get('/api/search/player', async (req, res) => {
         timeout: 30000
       }
     );
-    
     // Filtrar jogadores por nome
     const searchTerm = name.toLowerCase();
-    const filteredPlayers = response.data.filter(player => {
-      const playerName = (player.name || player.profileName || '').toLowerCase();
-      return playerName.includes(searchTerm);
-    });
-    
+    const filteredPlayers = response.data.statGroups
+      ? response.data.statGroups.flatMap(group => group.members)
+        .filter(player => (player.alias || player.name || '').toLowerCase().includes(searchTerm))
+      : [];
     console.log(`✅ Busca por '${name}' retornou ${filteredPlayers.length} resultados`);
     res.json(filteredPlayers);
   } catch (error) {
