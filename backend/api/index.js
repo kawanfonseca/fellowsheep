@@ -213,6 +213,5 @@ app.listen(PORT, () => {
   console.log(`📍 Host: 0.0.0.0`);
   console.log(`🔌 Porta: ${PORT}`);
   console.log(`🌐 URL: http://localhost:${PORT}`);
-  console.log(`❤️  Health Check: http://localhost:${PORT}/health`);
   console.log('='.repeat(50));
 }); 
