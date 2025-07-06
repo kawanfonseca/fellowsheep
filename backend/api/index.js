@@ -7,7 +7,7 @@ const app = express();
 const PORT = process.env.PORT || 8000;
 
 // URL base da API do Age of Empires 2 DE
-const AOE_API_BASE = 'https://aoe-api.reliclink.com';
+const AOE_API_BASE = 'https://aoe-api.worldsedgelink.com';
 
 // Configurar CORS
 app.use(cors({
@@ -36,21 +36,12 @@ app.get('/', (req, res) => {
     status: 'running',
     api_base: AOE_API_BASE,
     endpoints: {
-      health: '/api/health',
+      // health: '/api/health',
       leaderboards: '/api/leaderboards',
       leaderboard: '/api/leaderboard/:id',
       player_stats: '/api/player/stats',
       search_player: '/api/search/player'
     }
-  });
-});
-
-// Health check
-app.get('/api/health', (req, res) => {
-  res.json({
-    status: 'healthy',
-    service: 'fellowsheep-proxy',
-    timestamp: new Date().toISOString()
   });
 });
 

@@ -51,7 +51,7 @@ class AoeApiService {
   // Verificar se o backend está disponível
   async checkBackendAvailability() {
     try {
-      const response = await fetch(`${API_BASE_URL}/health`, {
+      const response = await fetch(`${API_BASE_URL}/api/health`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
