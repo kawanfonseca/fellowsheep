@@ -36,7 +36,7 @@ app.get('/', (req, res) => {
     status: 'running',
     api_base: AOE_API_BASE,
     endpoints: {
-      health: '/health',
+      health: '/api/health',
       leaderboards: '/api/leaderboards',
       leaderboard: '/api/leaderboard/:id',
       player_stats: '/api/player/stats',
@@ -46,7 +46,7 @@ app.get('/', (req, res) => {
 });
 
 // Health check
-app.get('/health', (req, res) => {
+app.get('/api/health', (req, res) => {
   res.json({
     status: 'healthy',
     service: 'fellowsheep-proxy',
