@@ -1,7 +1,5 @@
-// URL do backend local (pode ser alterada para produção)
-const API_BASE_URL = process.env.NODE_ENV === 'production' 
-  ? '' // Em produção, usar rotas relativas para evitar CORS
-  : 'http://localhost:8000';
+import axios from 'axios';
+const API_BASE_URL = 'http://filipedasilva.co.uk/api';
 
 // Dados mockados para fallback
 const MOCK_DATA = {
@@ -12,31 +10,31 @@ const MOCK_DATA = {
     { id: 14, name: 'Team Empire Wars' }
   ],
   players: [
-    { profileId: 1, name: 'Fs.Kawan', rating: 1850, games: 245, wins: 198, profileName: 'Fs.Kawan' },
-    { profileId: 2, name: 'Fs.SheepKing', rating: 1820, games: 189, wins: 156, profileName: 'Fs.SheepKing' },
-    { profileId: 3, name: 'Fs.WoolWarrior', rating: 1780, games: 167, wins: 134, profileName: 'Fs.WoolWarrior' },
-    { profileId: 4, name: 'Fs.FlockCommander', rating: 1750, games: 145, wins: 112, profileName: 'Fs.FlockCommander' },
-    { profileId: 5, name: 'Fs.RamMaster', rating: 1720, games: 134, wins: 98, profileName: 'Fs.RamMaster' },
-    { profileId: 6, name: 'Fs.CastleBuilder', rating: 1680, games: 156, wins: 108, profileName: 'Fs.CastleBuilder' },
-    { profileId: 7, name: 'Fs.SiegeExpert', rating: 1650, games: 123, wins: 89, profileName: 'Fs.SiegeExpert' },
-    { profileId: 8, name: 'Fs.ArcherQueen', rating: 1620, games: 145, wins: 98, profileName: 'Fs.ArcherQueen' },
-    { profileId: 9, name: 'Fs.KnightRider', rating: 1590, games: 134, wins: 87, profileName: 'Fs.KnightRider' },
-    { profileId: 10, name: 'Fs.VillagerPro', rating: 1560, games: 112, wins: 76, profileName: 'Fs.VillagerPro' },
-    { profileId: 11, name: 'TheViper', rating: 1900, games: 300, wins: 245, profileName: 'TheViper' },
-    { profileId: 12, name: 'DauT', rating: 1880, games: 289, wins: 234, profileName: 'DauT' },
-    { profileId: 13, name: 'TaToH', rating: 1860, games: 267, wins: 212, profileName: 'TaToH' },
-    { profileId: 14, name: 'Liereyy', rating: 1840, games: 245, wins: 198, profileName: 'Liereyy' },
-    { profileId: 15, name: 'Hera', rating: 1820, games: 223, wins: 187, profileName: 'Hera' },
-    { profileId: 16, name: 'Yo', rating: 1800, games: 201, wins: 165, profileName: 'Yo' },
-    { profileId: 17, name: 'MbL', rating: 1780, games: 189, wins: 154, profileName: 'MbL' },
-    { profileId: 18, name: 'Villese', rating: 1760, games: 178, wins: 143, profileName: 'Villese' },
-    { profileId: 19, name: 'ACCM', rating: 1740, games: 167, wins: 132, profileName: 'ACCM' },
-    { profileId: 20, name: 'Nicov', rating: 1720, games: 156, wins: 121, profileName: 'Nicov' },
-    { profileId: 21, name: 'Fs.TowerRush', rating: 1530, games: 98, wins: 65, profileName: 'Fs.TowerRush' },
-    { profileId: 22, name: 'Fs.ScoutRush', rating: 1500, games: 87, wins: 54, profileName: 'Fs.ScoutRush' },
-    { profileId: 23, name: 'Fs.MonkRush', rating: 1470, games: 76, wins: 43, profileName: 'Fs.MonkRush' },
-    { profileId: 24, name: 'Fs.PaladinRush', rating: 1440, games: 65, wins: 32, profileName: 'Fs.PaladinRush' },
-    { profileId: 25, name: 'Fs.CamelRush', rating: 1410, games: 54, wins: 21, profileName: 'Fs.CamelRush' }
+    // { profileId: 1, name: 'Fs.Kawan', rating: 1850, games: 245, wins: 198, profileName: 'Fs.Kawan' },
+    // { profileId: 2, name: 'Fs.SheepKing', rating: 1820, games: 189, wins: 156, profileName: 'Fs.SheepKing' },
+    // { profileId: 3, name: 'Fs.WoolWarrior', rating: 1780, games: 167, wins: 134, profileName: 'Fs.WoolWarrior' },
+    // { profileId: 4, name: 'Fs.FlockCommander', rating: 1750, games: 145, wins: 112, profileName: 'Fs.FlockCommander' },
+    // { profileId: 5, name: 'Fs.RamMaster', rating: 1720, games: 134, wins: 98, profileName: 'Fs.RamMaster' },
+    // { profileId: 6, name: 'Fs.CastleBuilder', rating: 1680, games: 156, wins: 108, profileName: 'Fs.CastleBuilder' },
+    // { profileId: 7, name: 'Fs.SiegeExpert', rating: 1650, games: 123, wins: 89, profileName: 'Fs.SiegeExpert' },
+    // { profileId: 8, name: 'Fs.ArcherQueen', rating: 1620, games: 145, wins: 98, profileName: 'Fs.ArcherQueen' },
+    // { profileId: 9, name: 'Fs.KnightRider', rating: 1590, games: 134, wins: 87, profileName: 'Fs.KnightRider' },
+    // { profileId: 10, name: 'Fs.VillagerPro', rating: 1560, games: 112, wins: 76, profileName: 'Fs.VillagerPro' },
+    // { profileId: 11, name: 'TheViper', rating: 1900, games: 300, wins: 245, profileName: 'TheViper' },
+    // { profileId: 12, name: 'DauT', rating: 1880, games: 289, wins: 234, profileName: 'DauT' },
+    // { profileId: 13, name: 'TaToH', rating: 1860, games: 267, wins: 212, profileName: 'TaToH' },
+    // { profileId: 14, name: 'Liereyy', rating: 1840, games: 245, wins: 198, profileName: 'Liereyy' },
+    // { profileId: 15, name: 'Hera', rating: 1820, games: 223, wins: 187, profileName: 'Hera' },
+    // { profileId: 16, name: 'Yo', rating: 1800, games: 201, wins: 165, profileName: 'Yo' },
+    // { profileId: 17, name: 'MbL', rating: 1780, games: 189, wins: 154, profileName: 'MbL' },
+    // { profileId: 18, name: 'Villese', rating: 1760, games: 178, wins: 143, profileName: 'Villese' },
+    // { profileId: 19, name: 'ACCM', rating: 1740, games: 167, wins: 132, profileName: 'ACCM' },
+    // { profileId: 20, name: 'Nicov', rating: 1720, games: 156, wins: 121, profileName: 'Nicov' },
+    // { profileId: 21, name: 'Fs.TowerRush', rating: 1530, games: 98, wins: 65, profileName: 'Fs.TowerRush' },
+    // { profileId: 22, name: 'Fs.ScoutRush', rating: 1500, games: 87, wins: 54, profileName: 'Fs.ScoutRush' },
+    // { profileId: 23, name: 'Fs.MonkRush', rating: 1470, games: 76, wins: 43, profileName: 'Fs.MonkRush' },
+    // { profileId: 24, name: 'Fs.PaladinRush', rating: 1440, games: 65, wins: 32, profileName: 'Fs.PaladinRush' },
+    // { profileId: 25, name: 'Fs.CamelRush', rating: 1410, games: 54, wins: 21, profileName: 'Fs.CamelRush' }
   ]
 };
 
@@ -66,10 +64,12 @@ class AoeApiService {
     if (this.isCacheValid(cacheKey)) {
       return this.cache.get(cacheKey).data;
     }
+    // TODO: Remover mock
+    return MOCK_DATA.leaderboards;
 
     try {
-      const response = await fetch(`${API_BASE_URL}/api/leaderboards`);
-      const data = await response.json();
+      const response = await axios.get(`${API_BASE_URL}/leaderboard`);
+      const data = response.data;
       
       this.cache.set(cacheKey, {
         data,
@@ -186,7 +186,7 @@ class AoeApiService {
     if (!players || !Array.isArray(players)) return [];
     
     return players.filter(player => {
-      const name = player.name || player.profileName || '';
+      const name = player.nickname;
       return name.toLowerCase().includes('fs.');
     });
   }
@@ -194,9 +194,10 @@ class AoeApiService {
   // Buscar ranking com filtro Fs.
   async getFsRanking(leaderboardId = 3, start = 0, count = 1000) {
     try {
-      const allPlayers = await this.getLeaderboard(leaderboardId, start, count);
+      const response = await axios.get(`${API_BASE_URL}/rankFS1v1`);
+      const allPlayers = response.data;
       const fsPlayers = this.filterFsPlayers(allPlayers);
-      
+
       return {
         allPlayers,
         fsPlayers,

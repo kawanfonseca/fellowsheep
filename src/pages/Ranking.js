@@ -76,7 +76,7 @@ const Ranking = () => {
     if (searchTerm) {
       const searchLower = searchTerm.toLowerCase();
       players = players.filter(player => {
-        const name = formatPlayerName(player.name || player.profileName || '');
+        const name = formatPlayerName(player.nickname || '');
         return name.toLowerCase().includes(searchLower);
       });
     }
@@ -210,9 +210,9 @@ const Ranking = () => {
       <div className="card">
         <h3>{t('ranking.stats_title')}</h3>
         <p>
-          <strong>{t('ranking.total_players')}:</strong> {activeTab === 'clan' ? rankingData.totalFsPlayers : rankingData.totalPlayers}<br/>
-          <strong>{t('ranking.showing')}:</strong> {displayPlayers.length} {t('ranking.player')}<br/>
-          <strong>{t('ranking.type')}:</strong> {leaderboardNames[selectedLeaderboard]}
+          <strong>{t('ranking.total_players')}</strong> {activeTab === 'clan' ? rankingData.totalFsPlayers : rankingData.totalPlayers}<br/>
+          <strong>{t('ranking.showing')}</strong> {displayPlayers.length} {t('ranking.player')}<br/>
+          <strong>{t('ranking.type')}</strong> {leaderboardNames[selectedLeaderboard]}
         </p>
       </div>
       
@@ -238,12 +238,12 @@ const Ranking = () => {
               </thead>
               <tbody>
                 {displayPlayers.map((player, index) => {
-                  const isFsPlayer = (player.name || player.profileName || '').toLowerCase().includes('fs.');
-                  const winRate = player.games > 0 ? ((player.wins / player.games) * 100).toFixed(1) : '0.0';
+                  const isFsPlayer = (player.nickname || '').toLowerCase().includes('fs.');
+                  const winRate = (player.wins + player.losses) > 0 ? ((player.wins / (player.wins + player.losses)) * 100).toFixed(1) : '0.0';
                   
                   return (
                     <tr 
-                      key={player.profileId || index} 
+                      key={index} 
                       style={{
                         borderBottom: '1px solid #444',
                         backgroundColor: isFsPlayer ? 'rgba(212, 175, 55, 0.1)' : 'transparent'
@@ -259,14 +259,14 @@ const Ranking = () => {
                         )}
                       </td>
                       <td style={{padding: '1rem', color: '#e0e0e0', fontWeight: 'bold'}}>
-                        {formatPlayerName(player.name || player.profileName)}
+                        {formatPlayerName(player.nickname)}
                         {isFsPlayer && <span style={{color: '#d4af37', marginLeft: '0.5rem'}}>👑</span>}
                       </td>
                       <td style={{padding: '1rem', textAlign: 'center', color: getEloColor(player.rating), fontWeight: 'bold'}}>
                         {player.rating || 'N/A'}
                       </td>
                       <td style={{padding: '1rem', textAlign: 'center', color: '#e0e0e0'}}>
-                        {player.games || 'N/A'}
+                        {(player.wins + player.losses) || 'N/A'}
                       </td>
                       <td style={{padding: '1rem', textAlign: 'center', color: '#e0e0e0'}}>
                         {player.wins || 'N/A'}
@@ -290,13 +290,13 @@ const Ranking = () => {
           {rankingData.fsPlayers.length > 0 ? (
             <div>
               {rankingData.fsPlayers.slice(0, 3).map((player, index) => {
-                const winRate = player.games > 0 ? ((player.wins / player.games) * 100).toFixed(1) : '0.0';
+                const winRate = (player.wins + player.losses) > 0 ? ((player.wins / (player.wins + player.losses)) * 100).toFixed(1) : '0.0';
                 return (
-                  <p key={player.profileId || index}>
+                  <p key={index}>
                     {index === 0 ? '🥇' : index === 1 ? '🥈' : '🥉'} 
-                    <strong>{formatPlayerName(player.name || player.profileName)}</strong> - 
-                    ELO: {player.rating || 'N/A'} | 
-                    {t('ranking.games')}: {player.games || 'N/A'} | 
+                    <strong>{formatPlayerName(player.nickname)}</strong> - 
+                    ELO: {player.rating || 'N/A'}{" | "}
+                    {t('ranking.games')}: {(player.wins + player.losses) || 'N/A'}{" | "}
                     {t('ranking.winrate')}: {winRate}%
                   </p>
                 );
