@@ -1,5 +1,5 @@
 import axios from 'axios';
-const API_BASE_URL = 'http://filipedasilva.co.uk/api';
+const API_BASE_URL = 'https://fellowsheepapi.vercel.app/api';
 
 // Dados mockados para fallback
 const MOCK_DATA = {
