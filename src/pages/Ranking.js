@@ -3,6 +3,7 @@ import aoeApi from '../services/aoeApi';
 import { useTranslation } from 'react-i18next';
 
 const Ranking = () => {
+  console.log('DEBUG: Ranking component mounted/rendered');
   const { t } = useTranslation();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -27,10 +28,12 @@ const Ranking = () => {
   };
 
   useEffect(() => {
+    console.log('DEBUG: useEffect loadLeaderboards triggered');
     loadLeaderboards();
   }, []);
 
   useEffect(() => {
+    console.log('DEBUG: useEffect loadRankingData triggered', { selectedLeaderboard });
     loadRankingData();
   }, [selectedLeaderboard]);
 
