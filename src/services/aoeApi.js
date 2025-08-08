@@ -100,8 +100,8 @@ class AoeApiService {
       // Buscar do backend fellowsheepapi
       const endpointMap = {
         3: `${API_BASE_URL}/api/rankAll1v1`,   // 1v1 RM
-        4: `${API_BASE_URL}/api/rankAllEw`,    // 1v1 EW
-        13: `${API_BASE_URL}/api/rankAllTg`,   // TG RM
+        4: `${API_BASE_URL}/api/rankAllTg`,    // Ajuste: estava invertido com TG RM
+        13: `${API_BASE_URL}/api/rankAllEw`,   // Ajuste: estava invertido com 1v1 EW
         14: `${API_BASE_URL}/api/rankAllTg`    // (fallback) TG EW não disponível
       };
       const url = endpointMap[leaderboardId] || endpointMap[3];
