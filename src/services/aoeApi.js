@@ -1,6 +1,7 @@
 import axios from 'axios';
 import fsClanIds from '../data/fsClanIds';
-const API_BASE_URL = 'https://fellowsheepapi.vercel.app/api';
+// Base sem "/api" para evitar duplicação ao montar rotas
+const API_BASE_URL = 'https://fellowsheepapi.vercel.app';
 const NIGHTBOT_BASE_URL = 'https://data.aoe2companion.com/api/nightbot/rank';
 
 // Dados mockados para fallback
@@ -96,16 +97,23 @@ class AoeApiService {
     }
 
     try {
-      const response = await fetch(
-        `${API_BASE_URL}/api/leaderboard/${leaderboardId}?start=${start}&count=${count}&sort_by=1`
-      );
+      // Mapear para endpoints existentes no backend fellowsheepapi
+      const endpointMap = {
+        3: `${API_BASE_URL}/api/rankAll1v1`,   // 1v1 RM
+        4: `${API_BASE_URL}/api/rankAllEw`,    // 1v1 EW
+        13: `${API_BASE_URL}/api/rankAllTg`,   // TG RM
+        14: `${API_BASE_URL}/api/rankAllTg`    // (fallback) TG EW não disponível
+      };
+
+      const url = endpointMap[leaderboardId] || endpointMap[3];
+      const response = await fetch(url);
       const data = await response.json();
-      
+
       this.cache.set(cacheKey, {
         data,
         timestamp: Date.now()
       });
-      
+
       return data;
     } catch (error) {
       console.error('❌ Erro ao buscar ranking (usando fallback):', error);
@@ -146,17 +154,31 @@ class AoeApiService {
     }
 
     try {
-              const response = await fetch(
-          `${API_BASE_URL}/api/player/stats?profile_ids=${profileIds.join(',')}`
-        );
-      const data = await response.json();
-      
+      // Backend não possui endpoint em lote; buscar em paralelo por jogador
+      const buildUrl = (id) => `${API_BASE_URL}/api/player?profile_id=${encodeURIComponent(id)}`;
+      const requests = profileIds.map(async (id) => {
+        const resp = await fetch(buildUrl(id));
+        if (!resp.ok) return null;
+        const data = await resp.json();
+        return {
+          profileId: id,
+          name: data.nick,
+          rating: data.rm1v1Stats?.rating || 0,
+          games: (data.rm1v1Stats?.wins || 0) + (data.rm1v1Stats?.losses || 0),
+          wins: data.rm1v1Stats?.wins || 0,
+          losses: data.rm1v1Stats?.losses || 0,
+          winRate: data.rm1v1Stats ? (((data.rm1v1Stats.wins || 0) / (((data.rm1v1Stats.wins || 0) + (data.rm1v1Stats.losses || 0)) || 1)) * 100).toFixed(1) : '0.0'
+        };
+      });
+
+      const results = (await Promise.all(requests)).filter(Boolean);
+
       this.cache.set(cacheKey, {
-        data,
+        data: results,
         timestamp: Date.now()
       });
-      
-      return data;
+
+      return results;
     } catch (error) {
       console.error('❌ Erro ao buscar estatísticas pessoais (usando fallback):', error);
       // Fallback para dados mockados em caso de erro
@@ -200,71 +222,23 @@ class AoeApiService {
       return this.cache.get(cacheKey).data;
     }
 
-    const isNumeric = (value) => typeof value === 'string' && /^\d+$/.test(value.trim());
-
-    const buildUrl = (member) => {
-      const params = new URLSearchParams();
-      params.set('leaderboard_id', String(leaderboardId));
-      params.set('flag', 'false');
-      if (member.steam && isNumeric(member.steam)) {
-        params.set('steam_id', member.steam.trim());
-      } else if (member.id && isNumeric(member.id)) {
-        params.set('profile_id', member.id.trim());
-      } else {
-        params.set('search', member.nick);
-      }
-      return `${NIGHTBOT_BASE_URL}?${params.toString()}`;
+    // Utilizar o backend fellowsheepapi para obter o ranking do clã baseado na lista oficial
+    const endpointMap = {
+      3: `${API_BASE_URL}/api/rankFS1v1`, // 1v1 RM
+      4: `${API_BASE_URL}/api/rankFSEw`,  // 1v1 EW
+      13: `${API_BASE_URL}/api/rankFSTg`, // Team RM
+      14: `${API_BASE_URL}/api/rankFSTg`  // (fallback) Team EW -> usar TG RM
     };
 
-    const parseNightbotRankText = (text) => {
-      if (!text || typeof text !== 'string') return null;
-      // Exemplos:
-      // "Hoang (1799) Rank #44, has played 1181 games with a 59% winrate, -1 streak, and 20 drops"
-      // "Player not found" ou respostas semelhantes devem retornar null
-      if (/not\s*found|unranked|no\s*data/i.test(text)) return null;
-
-      const nameAndRating = text.match(/^([^\(]+)\s*\((\d+)\)/);
-      const rankMatch = text.match(/Rank\s*#?(\d+)/i);
-      const gamesMatch = text.match(/has\s*played\s*(\d+)\s*games/i);
-      const winrateMatch = text.match(/(\d+(?:\.\d+)?)%\s*winrate/i);
-
-      if (!nameAndRating) return null;
-      const name = nameAndRating[1].trim();
-      const rating = Number(nameAndRating[2]);
-      const games = gamesMatch ? Number(gamesMatch[1]) : 0;
-      const winRatePct = winrateMatch ? Number(winrateMatch[1]) : 0;
-      const wins = Math.round(games * (winRatePct / 100));
-      const losses = Math.max(0, games - wins);
-      const rank = rankMatch ? Number(rankMatch[1]) : null;
-
-      return { name, rating, games, winRatePct, wins, losses, rank };
-    };
-
-    const fetchMember = async (member) => {
-      try {
-        const url = buildUrl(member);
-        const resp = await fetch(url);
-        const text = await resp.text();
-        const parsed = parseNightbotRankText(text);
-        if (!parsed) return null;
-        return {
-          nickname: member.nick || parsed.name,
-          rating: parsed.rating,
-          wins: parsed.wins,
-          losses: parsed.losses,
-          rank: parsed.rank
-        };
-      } catch (e) {
-        return null;
-      }
-    };
-
-    // Buscar todos em paralelo
-    const results = await Promise.all(fsClanIds.map(fetchMember));
-    const fsPlayers = results.filter(Boolean).sort((a, b) => (b.rating || 0) - (a.rating || 0));
+    const url = endpointMap[leaderboardId] || endpointMap[3];
+    const resp = await fetch(url);
+    const ranking = await resp.json();
+    const fsPlayers = Array.isArray(ranking)
+      ? ranking.sort((a, b) => (b.rating || 0) - (a.rating || 0))
+      : [];
 
     const data = {
-      allPlayers: fsPlayers, // Para a aba "Geral" podemos manter igual por enquanto
+      allPlayers: fsPlayers,
       fsPlayers,
       totalFsPlayers: fsPlayers.length,
       totalPlayers: fsPlayers.length
@@ -277,9 +251,9 @@ class AoeApiService {
   // Buscar jogador por nome
   async searchPlayerByName(searchTerm, leaderboardId = 3) {
     try {
-              const response = await fetch(
-          `${API_BASE_URL}/api/search/player?name=${encodeURIComponent(searchTerm)}&leaderboard_id=${leaderboardId}`
-        );
+      const response = await fetch(
+        `${API_BASE_URL}/api/search/player?name=${encodeURIComponent(searchTerm)}&leaderboard_id=${leaderboardId}`
+      );
       const data = await response.json();
       return data;
     } catch (error) {
