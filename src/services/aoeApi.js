@@ -1,5 +1,7 @@
 import axios from 'axios';
+import fsClanIds from '../data/fsClanIds';
 const API_BASE_URL = 'https://fellowsheepapi.vercel.app/api';
+const NIGHTBOT_BASE_URL = 'https://data.aoe2companion.com/api/nightbot/rank';
 
 // Dados mockados para fallback
 const MOCK_DATA = {
@@ -191,23 +193,85 @@ class AoeApiService {
     });
   }
 
-  // Buscar ranking com filtro Fs.
-  async getFsRanking(leaderboardId = 3, start = 0, count = 1000) {
-    try {
-      const response = await axios.get(`${API_BASE_URL}/rankFS1v1`);
-      const allPlayers = response.data;
-      const fsPlayers = this.filterFsPlayers(allPlayers);
-
-      return {
-        allPlayers,
-        fsPlayers,
-        totalFsPlayers: fsPlayers.length,
-        totalPlayers: allPlayers.length
-      };
-    } catch (error) {
-      console.error('❌ Erro ao buscar ranking Fs.:', error);
-      throw error;
+  // Buscar ranking do Clan baseado na lista fixa usando a API Nightbot do AOE2 Companion
+  async getFsRanking(leaderboardId = 3) {
+    const cacheKey = `fs_ranking_${leaderboardId}`;
+    if (this.isCacheValid(cacheKey)) {
+      return this.cache.get(cacheKey).data;
     }
+
+    const isNumeric = (value) => typeof value === 'string' && /^\d+$/.test(value.trim());
+
+    const buildUrl = (member) => {
+      const params = new URLSearchParams();
+      params.set('leaderboard_id', String(leaderboardId));
+      params.set('flag', 'false');
+      if (member.steam && isNumeric(member.steam)) {
+        params.set('steam_id', member.steam.trim());
+      } else if (member.id && isNumeric(member.id)) {
+        params.set('profile_id', member.id.trim());
+      } else {
+        params.set('search', member.nick);
+      }
+      return `${NIGHTBOT_BASE_URL}?${params.toString()}`;
+    };
+
+    const parseNightbotRankText = (text) => {
+      if (!text || typeof text !== 'string') return null;
+      // Exemplos:
+      // "Hoang (1799) Rank #44, has played 1181 games with a 59% winrate, -1 streak, and 20 drops"
+      // "Player not found" ou respostas semelhantes devem retornar null
+      if (/not\s*found|unranked|no\s*data/i.test(text)) return null;
+
+      const nameAndRating = text.match(/^([^\(]+)\s*\((\d+)\)/);
+      const rankMatch = text.match(/Rank\s*#?(\d+)/i);
+      const gamesMatch = text.match(/has\s*played\s*(\d+)\s*games/i);
+      const winrateMatch = text.match(/(\d+(?:\.\d+)?)%\s*winrate/i);
+
+      if (!nameAndRating) return null;
+      const name = nameAndRating[1].trim();
+      const rating = Number(nameAndRating[2]);
+      const games = gamesMatch ? Number(gamesMatch[1]) : 0;
+      const winRatePct = winrateMatch ? Number(winrateMatch[1]) : 0;
+      const wins = Math.round(games * (winRatePct / 100));
+      const losses = Math.max(0, games - wins);
+      const rank = rankMatch ? Number(rankMatch[1]) : null;
+
+      return { name, rating, games, winRatePct, wins, losses, rank };
+    };
+
+    const fetchMember = async (member) => {
+      try {
+        const url = buildUrl(member);
+        const resp = await fetch(url);
+        const text = await resp.text();
+        const parsed = parseNightbotRankText(text);
+        if (!parsed) return null;
+        return {
+          nickname: member.nick || parsed.name,
+          rating: parsed.rating,
+          wins: parsed.wins,
+          losses: parsed.losses,
+          rank: parsed.rank
+        };
+      } catch (e) {
+        return null;
+      }
+    };
+
+    // Buscar todos em paralelo
+    const results = await Promise.all(fsClanIds.map(fetchMember));
+    const fsPlayers = results.filter(Boolean).sort((a, b) => (b.rating || 0) - (a.rating || 0));
+
+    const data = {
+      allPlayers: fsPlayers, // Para a aba "Geral" podemos manter igual por enquanto
+      fsPlayers,
+      totalFsPlayers: fsPlayers.length,
+      totalPlayers: fsPlayers.length
+    };
+
+    this.cache.set(cacheKey, { data, timestamp: Date.now() });
+    return data;
   }
 
   // Buscar jogador por nome
