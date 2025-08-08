@@ -43,7 +43,9 @@ const Ranking = () => {
 
   const loadLeaderboards = async () => {
     try {
+      console.log('DEBUG: Ranking.loadLeaderboards:start');
       const data = await aoeApi.getAvailableLeaderboards();
+      console.log('DEBUG: Ranking.loadLeaderboards:received', { length: data?.length, sample: data?.[0] });
       setLeaderboards(data);
     } catch (error) {
       console.error('Erro ao carregar leaderboards:', error);
@@ -51,6 +53,7 @@ const Ranking = () => {
   };
 
   const loadRankingData = async () => {
+    console.log('DEBUG: Ranking.loadRankingData:start', { selectedLeaderboard, activeTab });
     setLoading(true);
     setError(null);
     
@@ -60,6 +63,8 @@ const Ranking = () => {
         aoeApi.getLeaderboard(3, 0, 100),
         aoeApi.getFsRanking(selectedLeaderboard, 0, 1000),
       ]);
+      console.log('DEBUG: Ranking.loadRankingData:general_received', { length: general?.length, sample: general?.[0] });
+      console.log('DEBUG: Ranking.loadRankingData:fs_received', { length: fsData?.fsPlayers?.length, sample: fsData?.fsPlayers?.[0] });
 
       setRankingData({
         allPlayers: general,
@@ -67,9 +72,10 @@ const Ranking = () => {
         totalFsPlayers: fsData.totalFsPlayers,
         totalPlayers: general.length,
       });
+      console.log('DEBUG: Ranking.loadRankingData:state_set', { allPlayersLength: general?.length, fsPlayersLength: fsData?.fsPlayers?.length });
     } catch (error) {
+      console.error('DEBUG: Ranking.loadRankingData:error', error);
       setError('Erro ao carregar dados do ranking. Tente novamente.');
-      console.error('Erro ao carregar ranking:', error);
     } finally {
       setLoading(false);
     }
@@ -88,7 +94,18 @@ const Ranking = () => {
   };
 
   const getDisplayPlayers = () => {
+    console.log('DEBUG: Ranking.getDisplayPlayers:start', { 
+      activeTab, 
+      allPlayersLength: rankingData.allPlayers?.length, 
+      fsPlayersLength: rankingData.fsPlayers?.length,
+      searchTerm 
+    });
     let players = activeTab === 'clan' ? rankingData.fsPlayers : rankingData.allPlayers;
+    console.log('DEBUG: Ranking.getDisplayPlayers:selected_players', { 
+      length: players?.length, 
+      isArray: Array.isArray(players),
+      sample: players?.[0] 
+    });
     
     if (searchTerm) {
       const searchLower = searchTerm.toLowerCase();
@@ -97,9 +114,12 @@ const Ranking = () => {
         const name = formatPlayerName(baseName);
         return name.toLowerCase().includes(searchLower);
       });
+      console.log('DEBUG: Ranking.getDisplayPlayers:after_search', { length: players?.length });
     }
     
-    return players.slice(0, 100); // Limitar a 100 jogadores para performance
+    const result = players.slice(0, 100); // Limitar a 100 jogadores para performance
+    console.log('DEBUG: Ranking.getDisplayPlayers:final_result', { length: result?.length, sample: result?.[0] });
+    return result;
   };
 
   const handleRefresh = () => {
@@ -139,6 +159,14 @@ const Ranking = () => {
   }
 
   const displayPlayers = getDisplayPlayers();
+  console.log('DEBUG: Ranking.render:displayPlayers', { 
+    length: displayPlayers?.length, 
+    activeTab, 
+    rankingDataState: {
+      allPlayers: rankingData.allPlayers?.length,
+      fsPlayers: rankingData.fsPlayers?.length
+    }
+  });
 
   return (
     <div className="page-container">
