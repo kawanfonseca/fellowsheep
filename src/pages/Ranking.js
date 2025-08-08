@@ -32,7 +32,7 @@ const Ranking = () => {
 
   useEffect(() => {
     loadRankingData();
-  }, [selectedLeaderboard, activeTab]);
+  }, [selectedLeaderboard]);
 
   const loadLeaderboards = async () => {
     try {
@@ -48,21 +48,18 @@ const Ranking = () => {
     setError(null);
     
     try {
-      if (activeTab === 'geral') {
-        const general = await aoeApi.getLeaderboard(selectedLeaderboard, 0, 100);
-        setRankingData((prev) => ({
-          ...prev,
-          allPlayers: general,
-          totalPlayers: general.length,
-        }));
-      } else {
-        const fsData = await aoeApi.getFsRanking(selectedLeaderboard, 0, 1000);
-        setRankingData((prev) => ({
-          ...prev,
-          fsPlayers: fsData.fsPlayers,
-          totalFsPlayers: fsData.totalFsPlayers,
-        }));
-      }
+      // Buscar SEMPRE os dois rankings para garantir dados prontos ao alternar abas
+      const [general, fsData] = await Promise.all([
+        aoeApi.getLeaderboard(selectedLeaderboard, 0, 100),
+        aoeApi.getFsRanking(selectedLeaderboard, 0, 1000),
+      ]);
+
+      setRankingData({
+        allPlayers: general,
+        fsPlayers: fsData.fsPlayers,
+        totalFsPlayers: fsData.totalFsPlayers,
+        totalPlayers: general.length,
+      });
     } catch (error) {
       setError('Erro ao carregar dados do ranking. Tente novamente.');
       console.error('Erro ao carregar ranking:', error);
