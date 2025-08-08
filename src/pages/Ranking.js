@@ -16,7 +16,7 @@ const Ranking = () => {
   const [showOnlyFs, setShowOnlyFs] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [leaderboards, setLeaderboards] = useState([]);
-  const [activeTab, setActiveTab] = useState('clan'); // 'clan' ou 'geral'
+  const [activeTab, setActiveTab] = useState('geral'); // 'clan' ou 'geral'
 
   // Mapeamento de IDs de leaderboard para nomes
   const leaderboardNames = {
@@ -32,7 +32,7 @@ const Ranking = () => {
 
   useEffect(() => {
     loadRankingData();
-  }, [selectedLeaderboard]);
+  }, [selectedLeaderboard, activeTab]);
 
   const loadLeaderboards = async () => {
     try {
@@ -48,18 +48,21 @@ const Ranking = () => {
     setError(null);
     
     try {
-      // Buscar em paralelo: ranking do clã e ranking geral via Companion
-      const [fsData, general] = await Promise.all([
-        aoeApi.getFsRanking(selectedLeaderboard, 0, 1000),
-        aoeApi.getLeaderboard(selectedLeaderboard, 0, 100)
-      ]);
-
-      setRankingData({
-        allPlayers: general,
-        fsPlayers: fsData.fsPlayers,
-        totalFsPlayers: fsData.totalFsPlayers,
-        totalPlayers: general.length
-      });
+      if (activeTab === 'geral') {
+        const general = await aoeApi.getLeaderboard(selectedLeaderboard, 0, 100);
+        setRankingData((prev) => ({
+          ...prev,
+          allPlayers: general,
+          totalPlayers: general.length,
+        }));
+      } else {
+        const fsData = await aoeApi.getFsRanking(selectedLeaderboard, 0, 1000);
+        setRankingData((prev) => ({
+          ...prev,
+          fsPlayers: fsData.fsPlayers,
+          totalFsPlayers: fsData.totalFsPlayers,
+        }));
+      }
     } catch (error) {
       setError('Erro ao carregar dados do ranking. Tente novamente.');
       console.error('Erro ao carregar ranking:', error);
