@@ -2,11 +2,7 @@ import React, { useState, useEffect } from 'react';
 import aoeApi from '../services/aoeApi';
 import { useTranslation } from 'react-i18next';
 
-console.log('DEBUG: Ranking.js module loaded');
-alert('Ranking.js carregado!');
-
 const Ranking = () => {
-  console.log('DEBUG: Ranking component mounted/rendered');
   const { t } = useTranslation();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -20,7 +16,7 @@ const Ranking = () => {
   const [showOnlyFs, setShowOnlyFs] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [leaderboards, setLeaderboards] = useState([]);
-  const [activeTab, setActiveTab] = useState('geral'); // 'clan' ou 'geral'
+  const [activeTab, setActiveTab] = useState('clan'); // 'clan' ou 'geral'
 
   // Mapeamento de IDs de leaderboard para nomes
   const leaderboardNames = {
@@ -31,27 +27,16 @@ const Ranking = () => {
   };
 
   useEffect(() => {
-    console.log('DEBUG: useEffect loadLeaderboards triggered');
     loadLeaderboards();
   }, []);
 
   useEffect(() => {
-    console.log('DEBUG: useEffect loadRankingData triggered', { selectedLeaderboard });
     loadRankingData();
   }, [selectedLeaderboard]);
 
-  // Garantir que na aba Geral apenas 1v1 (id=3) seja usado
-  useEffect(() => {
-    if (activeTab === 'geral' && selectedLeaderboard !== 3) {
-      setSelectedLeaderboard(3);
-    }
-  }, [activeTab]);
-
   const loadLeaderboards = async () => {
     try {
-      console.log('DEBUG: Ranking.loadLeaderboards:start');
       const data = await aoeApi.getAvailableLeaderboards();
-      console.log('DEBUG: Ranking.loadLeaderboards:received', { length: data?.length, sample: data?.[0] });
       setLeaderboards(data);
     } catch (error) {
       console.error('Erro ao carregar leaderboards:', error);
@@ -59,18 +44,15 @@ const Ranking = () => {
   };
 
   const loadRankingData = async () => {
-    console.log('DEBUG: Ranking.loadRankingData:start', { selectedLeaderboard, activeTab });
     setLoading(true);
     setError(null);
     
     try {
       // Buscar SEMPRE os dois rankings para garantir dados prontos ao alternar abas
       const [general, fsData] = await Promise.all([
-        aoeApi.getLeaderboard(3, 0, 100),
+        aoeApi.getLeaderboard(selectedLeaderboard, 0, 100),
         aoeApi.getFsRanking(selectedLeaderboard, 0, 1000),
       ]);
-      console.log('DEBUG: Ranking.loadRankingData:general_received', { length: general?.length, sample: general?.[0] });
-      console.log('DEBUG: Ranking.loadRankingData:fs_received', { length: fsData?.fsPlayers?.length, sample: fsData?.fsPlayers?.[0] });
 
       setRankingData({
         allPlayers: general,
@@ -78,10 +60,9 @@ const Ranking = () => {
         totalFsPlayers: fsData.totalFsPlayers,
         totalPlayers: general.length,
       });
-      console.log('DEBUG: Ranking.loadRankingData:state_set', { allPlayersLength: general?.length, fsPlayersLength: fsData?.fsPlayers?.length });
     } catch (error) {
-      console.error('DEBUG: Ranking.loadRankingData:error', error);
       setError('Erro ao carregar dados do ranking. Tente novamente.');
+      console.error('Erro ao carregar ranking:', error);
     } finally {
       setLoading(false);
     }
@@ -100,18 +81,7 @@ const Ranking = () => {
   };
 
   const getDisplayPlayers = () => {
-    console.log('DEBUG: Ranking.getDisplayPlayers:start', { 
-      activeTab, 
-      allPlayersLength: rankingData.allPlayers?.length, 
-      fsPlayersLength: rankingData.fsPlayers?.length,
-      searchTerm 
-    });
     let players = activeTab === 'clan' ? rankingData.fsPlayers : rankingData.allPlayers;
-    console.log('DEBUG: Ranking.getDisplayPlayers:selected_players', { 
-      length: players?.length, 
-      isArray: Array.isArray(players),
-      sample: players?.[0] 
-    });
     
     if (searchTerm) {
       const searchLower = searchTerm.toLowerCase();
@@ -120,12 +90,9 @@ const Ranking = () => {
         const name = formatPlayerName(baseName);
         return name.toLowerCase().includes(searchLower);
       });
-      console.log('DEBUG: Ranking.getDisplayPlayers:after_search', { length: players?.length });
     }
     
-    const result = players.slice(0, 100); // Limitar a 100 jogadores para performance
-    console.log('DEBUG: Ranking.getDisplayPlayers:final_result', { length: result?.length, sample: result?.[0] });
-    return result;
+    return players.slice(0, 100); // Limitar a 100 jogadores para performance
   };
 
   const handleRefresh = () => {
@@ -165,14 +132,6 @@ const Ranking = () => {
   }
 
   const displayPlayers = getDisplayPlayers();
-  console.log('DEBUG: Ranking.render:displayPlayers', { 
-    length: displayPlayers?.length, 
-    activeTab, 
-    rankingDataState: {
-      allPlayers: rankingData.allPlayers?.length,
-      fsPlayers: rankingData.fsPlayers?.length
-    }
-  });
 
   return (
     <div className="page-container">
@@ -215,22 +174,10 @@ const Ranking = () => {
               }}
             >
               <option value={3}>{leaderboardNames[3]}</option>
-              <option value={4} disabled={activeTab === 'geral'}>{leaderboardNames[4]}</option>
-              <option value={13} disabled={activeTab === 'geral'}>{leaderboardNames[13]}</option>
-              <option value={14} disabled={activeTab === 'geral'}>{leaderboardNames[14]}</option>
+              <option value={4}>{leaderboardNames[4]}</option>
+              <option value={13}>{leaderboardNames[13]}</option>
+              <option value={14}>{leaderboardNames[14]}</option>
             </select>
-          </div>
-          
-          <div>
-            <label style={{color: '#d4af37', marginRight: '0.5rem'}}>
-              <input 
-                type="checkbox" 
-                checked={showOnlyFs} 
-                onChange={(e) => setShowOnlyFs(e.target.checked)}
-                style={{marginRight: '0.5rem'}}
-              />
-              {t('ranking.show_fs')}
-            </label>
           </div>
           
           <div>
@@ -258,15 +205,6 @@ const Ranking = () => {
 
       </div>
       
-      {/* Estatísticas */}
-      <div className="card">
-        <h3>{t('ranking.stats_title')}</h3>
-        <p>
-          <strong>{t('ranking.total_players')}</strong> {activeTab === 'clan' ? rankingData.totalFsPlayers : rankingData.totalPlayers}<br/>
-          <strong>{t('ranking.showing')}</strong> {displayPlayers.length} {t('ranking.player')}<br/>
-          <strong>{t('ranking.type')}</strong> {leaderboardNames[selectedLeaderboard]}
-        </p>
-      </div>
       
       {/* Tabela de Classificação */}
       <div className="card">

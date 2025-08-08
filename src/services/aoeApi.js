@@ -63,20 +63,15 @@ class AoeApiService {
   // Buscar leaderboards disponíveis
   async getAvailableLeaderboards() {
     const cacheKey = 'available_leaderboards';
-    console.log('DEBUG: getAvailableLeaderboards:start');
     
     if (this.isCacheValid(cacheKey)) {
-      console.log('DEBUG: getAvailableLeaderboards:cache_hit');
       return this.cache.get(cacheKey).data;
     }
     // TODO: Remover mock
-    console.log('DEBUG: getAvailableLeaderboards:using_mock');
     return MOCK_DATA.leaderboards;
 
     try {
-      console.log('DEBUG: getAvailableLeaderboards:request', { url: `${API_BASE_URL}/leaderboard` });
       const response = await axios.get(`${API_BASE_URL}/leaderboard`);
-      console.log('DEBUG: getAvailableLeaderboards:response', { status: response.status });
       const data = response.data;
       
       this.cache.set(cacheKey, {
@@ -86,7 +81,7 @@ class AoeApiService {
       
       return data;
     } catch (error) {
-      console.error('DEBUG: getAvailableLeaderboards:error', error);
+      console.error('❌ Erro ao buscar leaderboards (usando fallback):', error);
       // Fallback para dados mockados em caso de erro
       await this.simulateNetworkDelay();
       return MOCK_DATA.leaderboards;
@@ -96,10 +91,8 @@ class AoeApiService {
   // Buscar ranking completo
   async getLeaderboard(leaderboardId = 3, start = 0, count = 1000) {
     const cacheKey = `leaderboard_${leaderboardId}_${start}_${count}`;
-    console.log('DEBUG: getLeaderboard:start', { leaderboardId, start, count });
     
     if (this.isCacheValid(cacheKey)) {
-      console.log('DEBUG: getLeaderboard:cache_hit', { cacheKey });
       return this.cache.get(cacheKey).data;
     }
 
@@ -112,11 +105,8 @@ class AoeApiService {
         14: `${API_BASE_URL}/api/rankAllTg`    // (fallback) TG EW não disponível
       };
       const url = endpointMap[leaderboardId] || endpointMap[3];
-      console.log('DEBUG: getLeaderboard:request', { url });
       const response = await fetch(url);
-      console.log('DEBUG: getLeaderboard:response', { ok: response.ok, status: response.status });
       const raw = await response.json();
-      console.log('DEBUG: getLeaderboard:raw_type', { isArray: Array.isArray(raw), hasPlayers: Array.isArray(raw?.players), hasLeaderboard: Array.isArray(raw?.leaderboard) });
 
       // Garantir que seja um array
       const data = Array.isArray(raw)
@@ -126,7 +116,6 @@ class AoeApiService {
           : Array.isArray(raw.leaderboard)
             ? raw.leaderboard
             : [];
-      console.log('DEBUG: getLeaderboard:parsed', { length: data.length, sample: data[0] });
 
       this.cache.set(cacheKey, {
         data,
@@ -135,7 +124,7 @@ class AoeApiService {
 
       return data;
     } catch (error) {
-      console.error('DEBUG: getLeaderboard:error', error);
+      console.error('❌ Erro ao buscar ranking (usando fallback):', error);
       // Fallback para dados mockados em caso de erro
       await this.simulateNetworkDelay();
       let players = [...MOCK_DATA.players];
@@ -164,13 +153,11 @@ class AoeApiService {
 
   // Buscar estatísticas pessoais de jogadores
   async getPersonalStats(profileIds) {
-    console.log('DEBUG: getPersonalStats:start', { profileIds });
     if (!profileIds || profileIds.length === 0) return [];
     
     const cacheKey = `personal_stats_${profileIds.join('_')}`;
     
     if (this.isCacheValid(cacheKey)) {
-      console.log('DEBUG: getPersonalStats:cache_hit', { cacheKey });
       return this.cache.get(cacheKey).data;
     }
 
@@ -178,9 +165,7 @@ class AoeApiService {
       // Backend não possui endpoint em lote; buscar em paralelo por jogador
       const buildUrl = (id) => `${API_BASE_URL}/api/player?profile_id=${encodeURIComponent(id)}`;
       const requests = profileIds.map(async (id) => {
-        console.log('DEBUG: getPersonalStats:request', { id, url: buildUrl(id) });
         const resp = await fetch(buildUrl(id));
-        console.log('DEBUG: getPersonalStats:response', { id, ok: resp.ok, status: resp.status });
         if (!resp.ok) return null;
         const data = await resp.json();
         return {
@@ -195,7 +180,6 @@ class AoeApiService {
       });
 
       const results = (await Promise.all(requests)).filter(Boolean);
-      console.log('DEBUG: getPersonalStats:parsed', { length: results.length, sample: results[0] });
 
       this.cache.set(cacheKey, {
         data: results,
@@ -204,7 +188,7 @@ class AoeApiService {
 
       return results;
     } catch (error) {
-      console.error('DEBUG: getPersonalStats:error', error);
+      console.error('❌ Erro ao buscar estatísticas pessoais (usando fallback):', error);
       // Fallback para dados mockados em caso de erro
       await this.simulateNetworkDelay();
       const stats = profileIds.map(id => {
