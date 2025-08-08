@@ -34,6 +34,13 @@ const Ranking = () => {
     loadRankingData();
   }, [selectedLeaderboard]);
 
+  // Garantir que na aba Geral apenas 1v1 (id=3) seja usado
+  useEffect(() => {
+    if (activeTab === 'geral' && selectedLeaderboard !== 3) {
+      setSelectedLeaderboard(3);
+    }
+  }, [activeTab]);
+
   const loadLeaderboards = async () => {
     try {
       const data = await aoeApi.getAvailableLeaderboards();
@@ -50,7 +57,7 @@ const Ranking = () => {
     try {
       // Buscar SEMPRE os dois rankings para garantir dados prontos ao alternar abas
       const [general, fsData] = await Promise.all([
-        aoeApi.getLeaderboard(selectedLeaderboard, 0, 100),
+        aoeApi.getLeaderboard(3, 0, 100),
         aoeApi.getFsRanking(selectedLeaderboard, 0, 1000),
       ]);
 
@@ -173,9 +180,9 @@ const Ranking = () => {
               }}
             >
               <option value={3}>{leaderboardNames[3]}</option>
-              <option value={4}>{leaderboardNames[4]}</option>
-              <option value={13}>{leaderboardNames[13]}</option>
-              <option value={14}>{leaderboardNames[14]}</option>
+              <option value={4} disabled={activeTab === 'geral'}>{leaderboardNames[4]}</option>
+              <option value={13} disabled={activeTab === 'geral'}>{leaderboardNames[13]}</option>
+              <option value={14} disabled={activeTab === 'geral'}>{leaderboardNames[14]}</option>
             </select>
           </div>
           
