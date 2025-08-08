@@ -48,8 +48,18 @@ const Ranking = () => {
     setError(null);
     
     try {
-      const data = await aoeApi.getFsRanking(selectedLeaderboard, 0, 1000);
-      setRankingData(data);
+      // Buscar em paralelo: ranking do clã e ranking geral via Companion
+      const [fsData, general] = await Promise.all([
+        aoeApi.getFsRanking(selectedLeaderboard, 0, 1000),
+        aoeApi.getLeaderboard(selectedLeaderboard, 0, 100)
+      ]);
+
+      setRankingData({
+        allPlayers: general,
+        fsPlayers: fsData.fsPlayers,
+        totalFsPlayers: fsData.totalFsPlayers,
+        totalPlayers: general.length
+      });
     } catch (error) {
       setError('Erro ao carregar dados do ranking. Tente novamente.');
       console.error('Erro ao carregar ranking:', error);
@@ -239,7 +249,8 @@ const Ranking = () => {
               <tbody>
                 {displayPlayers.map((player, index) => {
                   const isFsPlayer = (player.nickname || '').toLowerCase().includes('fs.');
-                  const winRate = (player.wins + player.losses) > 0 ? ((player.wins / (player.wins + player.losses)) * 100).toFixed(1) : '0.0';
+                   const totalGames = (player.wins || 0) + (player.losses || 0);
+                   const winRate = totalGames > 0 ? ((player.wins / totalGames) * 100).toFixed(1) : '0.0';
                   
                   return (
                     <tr 
@@ -266,7 +277,7 @@ const Ranking = () => {
                         {player.rating || 'N/A'}
                       </td>
                       <td style={{padding: '1rem', textAlign: 'center', color: '#e0e0e0'}}>
-                        {(player.wins + player.losses) || 'N/A'}
+                        {totalGames || 'N/A'}
                       </td>
                       <td style={{padding: '1rem', textAlign: 'center', color: '#e0e0e0'}}>
                         {player.wins || 'N/A'}

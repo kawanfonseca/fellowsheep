@@ -97,14 +97,13 @@ class AoeApiService {
     }
 
     try {
-      // Mapear para endpoints existentes no backend fellowsheepapi
+      // Buscar do backend fellowsheepapi
       const endpointMap = {
         3: `${API_BASE_URL}/api/rankAll1v1`,   // 1v1 RM
         4: `${API_BASE_URL}/api/rankAllEw`,    // 1v1 EW
         13: `${API_BASE_URL}/api/rankAllTg`,   // TG RM
         14: `${API_BASE_URL}/api/rankAllTg`    // (fallback) TG EW não disponível
       };
-
       const url = endpointMap[leaderboardId] || endpointMap[3];
       const response = await fetch(url);
       const data = await response.json();
