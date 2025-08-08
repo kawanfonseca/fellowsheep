@@ -2,6 +2,9 @@ import React, { useState, useEffect } from 'react';
 import aoeApi from '../services/aoeApi';
 import { useTranslation } from 'react-i18next';
 
+console.log('DEBUG: Ranking.js module loaded');
+alert('Ranking.js carregado!');
+
 const Ranking = () => {
   console.log('DEBUG: Ranking component mounted/rendered');
   const { t } = useTranslation();
