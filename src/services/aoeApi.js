@@ -106,7 +106,16 @@ class AoeApiService {
       };
       const url = endpointMap[leaderboardId] || endpointMap[3];
       const response = await fetch(url);
-      const data = await response.json();
+      const raw = await response.json();
+
+      // Garantir que seja um array
+      const data = Array.isArray(raw)
+        ? raw
+        : Array.isArray(raw.players)
+          ? raw.players
+          : Array.isArray(raw.leaderboard)
+            ? raw.leaderboard
+            : [];
 
       this.cache.set(cacheKey, {
         data,

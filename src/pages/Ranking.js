@@ -93,7 +93,8 @@ const Ranking = () => {
     if (searchTerm) {
       const searchLower = searchTerm.toLowerCase();
       players = players.filter(player => {
-        const name = formatPlayerName(player.nickname || '');
+        const baseName = player.nickname || player.name || '';
+        const name = formatPlayerName(baseName);
         return name.toLowerCase().includes(searchLower);
       });
     }
@@ -255,7 +256,8 @@ const Ranking = () => {
               </thead>
               <tbody>
                 {displayPlayers.map((player, index) => {
-                  const isFsPlayer = (player.nickname || '').toLowerCase().includes('fs.');
+                  const displayName = player.nickname || player.name || '';
+                  const isFsPlayer = displayName.toLowerCase().includes('fs.');
                    const totalGames = (player.wins || 0) + (player.losses || 0);
                    const winRate = totalGames > 0 ? ((player.wins / totalGames) * 100).toFixed(1) : '0.0';
                   
@@ -277,7 +279,7 @@ const Ranking = () => {
                         )}
                       </td>
                       <td style={{padding: '1rem', color: '#e0e0e0', fontWeight: 'bold'}}>
-                        {formatPlayerName(player.nickname)}
+                        {formatPlayerName(displayName)}
                         {isFsPlayer && <span style={{color: '#d4af37', marginLeft: '0.5rem'}}>👑</span>}
                       </td>
                       <td style={{padding: '1rem', textAlign: 'center', color: getEloColor(player.rating), fontWeight: 'bold'}}>
