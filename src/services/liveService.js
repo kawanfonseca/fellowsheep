@@ -124,6 +124,34 @@ class LiveService {
     }
   }
 
+  // Buscar jogos ao vivo e partidas recentes para a Home
+  async getLiveAndRecentGames() {
+    try {
+      const [liveResp, recentResp] = await Promise.all([
+        fetch(`${this.backendBaseUrl}/api/liveFsMatches`),
+        fetch(`${this.backendBaseUrl}/api/recentFsMatches`)
+      ]);
+      const liveData = await liveResp.json();
+      const recentData = await recentResp.json();
+
+      const mapMatchToCard = (m) => ({
+        id: m.id,
+        gameType: m.gameType,
+        map: m.mapname,
+        startTime: new Date((m.startgametime || 0) * 1000) || new Date(),
+        team0: (m.teams?.team0 || []).map(p => p.name),
+        team1: (m.teams?.team1 || []).map(p => p.name),
+      });
+
+      const live = Array.isArray(liveData) ? liveData.map(mapMatchToCard) : [];
+      const recent = Array.isArray(recentData) ? recentData.map(mapMatchToCard) : [];
+
+      return { live, recent };
+    } catch (e) {
+      return { live: [], recent: [] };
+    }
+  }
+
   // Formatar tempo de jogo
   formatGameTime(startTime) {
     const now = new Date();

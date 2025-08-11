@@ -5,6 +5,7 @@ import liveService from '../services/liveService';
 const LiveGames = () => {
   const { t } = useTranslation();
   const [liveGames, setLiveGames] = useState([]);
+  const [recentGames, setRecentGames] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -12,8 +13,9 @@ const LiveGames = () => {
     const fetchLiveGames = async () => {
       try {
         setLoading(true);
-        const games = await liveService.getLiveGames();
-        setLiveGames(games);
+        const { live, recent } = await liveService.getLiveAndRecentGames();
+        setLiveGames(live);
+        setRecentGames(recent);
         setError(null);
       } catch (err) {
         setError('Erro ao carregar jogos ao vivo');
@@ -78,24 +80,58 @@ const LiveGames = () => {
               <span className="game-type">{game.gameType}</span>
               <span className="game-time">{liveService.formatGameTime(game.startTime)}</span>
             </div>
-            <div className="game-players">
-              <div className="player player1">
-                <span className="player-name">{game.player1}</span>
-                <span className="player-score">{game.score.split('-')[0]}</span>
-              </div>
-              <div className="vs-indicator">VS</div>
-              <div className="player player2">
-                <span className="player-name">{game.player2}</span>
-                <span className="player-score">{game.score.split('-')[1]}</span>
-              </div>
-            </div>
-            <div className="game-map">
+            <div className="game-map" style={{marginTop: '0.25rem'}}>
               <span className="map-label">{t('home.map')}:</span>
               <span className="map-name">{game.map}</span>
+            </div>
+            <div className="game-players" style={{display: 'grid', gridTemplateColumns: '1fr auto 1fr', gap: '0.5rem', marginTop: '0.5rem'}}>
+              <div className="player-list">
+                {(game.team0 || []).map((p, idx) => (
+                  <div key={idx} className="player-row">{p}</div>
+                ))}
+              </div>
+              <div className="vs-indicator" style={{alignSelf: 'center'}}>VS</div>
+              <div className="player-list" style={{textAlign: 'right'}}>
+                {(game.team1 || []).map((p, idx) => (
+                  <div key={idx} className="player-row">{p}</div>
+                ))}
+              </div>
             </div>
           </div>
         ))}
       </div>
+
+      {recentGames.length > 0 && (
+        <div style={{marginTop: '1.5rem'}}>
+          <h3 className="live-section-title">{t('home.recent_matches') || 'Partidas Recentes'}</h3>
+          <div className="live-games-grid">
+            {recentGames.map((game) => (
+              <div key={`recent-${game.id}`} className="live-game-card">
+                <div className="game-header">
+                  <span className="game-type">{game.gameType}</span>
+                </div>
+                <div className="game-map" style={{marginTop: '0.25rem'}}>
+                  <span className="map-label">{t('home.map')}:</span>
+                  <span className="map-name">{game.map}</span>
+                </div>
+                <div className="game-players" style={{display: 'grid', gridTemplateColumns: '1fr auto 1fr', gap: '0.5rem', marginTop: '0.5rem'}}>
+                  <div className="player-list">
+                    {(game.team0 || []).map((p, idx) => (
+                      <div key={idx} className="player-row">{p}</div>
+                    ))}
+                  </div>
+                  <div className="vs-indicator" style={{alignSelf: 'center'}}>VS</div>
+                  <div className="player-list" style={{textAlign: 'right'}}>
+                    {(game.team1 || []).map((p, idx) => (
+                      <div key={idx} className="player-row">{p}</div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 };
