@@ -81,45 +81,14 @@ class LiveService {
   // Buscar streams ao vivo da Twitch
   async getTwitchStreams() {
     const cacheKey = 'twitch_streams';
-    
     if (this.isCacheValid(cacheKey)) {
       return this.cache.get(cacheKey).data;
     }
-
     try {
-      // Aqui você pode integrar com a API da Twitch
-      // Por enquanto, usando dados mockados
-      await this.simulateNetworkDelay();
-      
-      const twitchStreams = [
-        {
-          id: 1,
-          username: 'fs_kawan',
-          title: 'Age of Empires 2 DE - Ranked Games',
-          game: 'Age of Empires II: Definitive Edition',
-          viewerCount: 245,
-          thumbnail: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIwIiBoZWlnaHQ9IjE4MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMzIwIiBoZWlnaHQ9IjE4MCIgZmlsbD0iIzY0NDFhNSIvPjx0ZXh0IHg9IjE2MCIgeT0iOTAiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxOCIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkZzLkthd2FuIExpdmU8L3RleHQ+PC9zdmc+',
-          url: 'https://twitch.tv/fs_kawan',
-          platform: 'twitch'
-        },
-        {
-          id: 2,
-          username: 'sheepking_aoe',
-          title: 'Empire Wars Tournament Practice',
-          game: 'Age of Empires II: Definitive Edition',
-          viewerCount: 189,
-          thumbnail: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIwIiBoZWlnaHQ9IjE4MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMzIwIiBoZWlnaHQ9IjE4MCIgZmlsbD0iIzY0NDFhNSIvPjx0ZXh0IHg9IjE2MCIgeT0iOTAiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxOCIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiPlNoZWVwS2luZyBMaXZlPC90ZXh0Pjwvc3ZnPg==',
-          url: 'https://twitch.tv/sheepking_aoe',
-          platform: 'twitch'
-        }
-      ];
-
-      this.cache.set(cacheKey, {
-        data: twitchStreams,
-        timestamp: Date.now()
-      });
-      
-      return twitchStreams;
+      const resp = await fetch(`${this.backendBaseUrl}/api/streams/twitch`);
+      const data = await resp.json();
+      this.cache.set(cacheKey, { data, timestamp: Date.now() });
+      return data;
     } catch (error) {
       console.error('Erro ao buscar streams da Twitch:', error);
       return [];
@@ -129,35 +98,14 @@ class LiveService {
   // Buscar streams ao vivo do YouTube
   async getYouTubeStreams() {
     const cacheKey = 'youtube_streams';
-    
     if (this.isCacheValid(cacheKey)) {
       return this.cache.get(cacheKey).data;
     }
-
     try {
-      // Aqui você pode integrar com a API do YouTube
-      // Por enquanto, usando dados mockados
-      await this.simulateNetworkDelay();
-      
-      const youtubeStreams = [
-        {
-          id: 1,
-          username: 'FellowSheep Gaming',
-          title: 'Team Games Night - Age of Empires 2 DE',
-          game: 'Age of Empires II: Definitive Edition',
-          viewerCount: 156,
-          thumbnail: 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzIwIiBoZWlnaHQ9IjE4MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48cmVjdCB3aWR0aD0iMzIwIiBoZWlnaHQ9IjE4MCIgZmlsbD0iI2ZmMDAwMCIvPjx0ZXh0IHg9IjE2MCIgeT0iOTAiIGZvbnQtZmFtaWx5PSJBcmlhbCwgc2Fucy1zZXJpZiIgZm9udC1zaXplPSIxOCIgZmlsbD0id2hpdGUiIHRleHQtYW5jaG9yPSJtaWRkbGUiPkZlbGxvd1NoZWVwIExpdmU8L3RleHQ+PC9zdmc+',
-          url: 'https://youtube.com/watch?v=live_stream',
-          platform: 'youtube'
-        }
-      ];
-
-      this.cache.set(cacheKey, {
-        data: youtubeStreams,
-        timestamp: Date.now()
-      });
-      
-      return youtubeStreams;
+      const resp = await fetch(`${this.backendBaseUrl}/api/streams/youtube`);
+      const data = await resp.json();
+      this.cache.set(cacheKey, { data, timestamp: Date.now() });
+      return data;
     } catch (error) {
       console.error('Erro ao buscar streams do YouTube:', error);
       return [];
@@ -167,12 +115,9 @@ class LiveService {
   // Buscar todos os streams ao vivo
   async getAllLiveStreams() {
     try {
-      const [twitchStreams, youtubeStreams] = await Promise.all([
-        this.getTwitchStreams(),
-        this.getYouTubeStreams()
-      ]);
-
-      return [...twitchStreams, ...youtubeStreams];
+      const resp = await fetch(`${this.backendBaseUrl}/api/streams`);
+      const data = await resp.json();
+      return Array.isArray(data) ? data : [];
     } catch (error) {
       console.error('Erro ao buscar todos os streams:', error);
       return [];
