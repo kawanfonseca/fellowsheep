@@ -3,6 +3,7 @@ class LiveService {
   constructor() {
     this.cache = new Map();
     this.cacheTimeout = 2 * 60 * 1000; // 2 minutos para dados ao vivo
+    this.backendBaseUrl = 'https://fellowsheepapi.vercel.app';
   }
 
   // Verificar se o cache ainda é válido
@@ -17,7 +18,7 @@ class LiveService {
     return new Promise(resolve => setTimeout(resolve, 300 + Math.random() * 500));
   }
 
-  // Buscar jogos ao vivo do clã (mockado por enquanto)
+  // Buscar jogos ao vivo do clã usando backend (proxy + filtro FS)
   async getLiveGames() {
     const cacheKey = 'live_games';
     
@@ -26,52 +27,51 @@ class LiveService {
     }
 
     try {
-      // Aqui você pode integrar com a API real do Age of Empires 2 DE
-      // Por enquanto, usando dados mockados
-      await this.simulateNetworkDelay();
-      
-      const liveGames = [
-        {
-          id: 1,
-          player1: 'Fs.Kawan',
-          player2: 'TheViper',
-          map: 'Arabia',
-          gameType: '1v1 Random Map',
-          startTime: new Date(Date.now() - 15 * 60 * 1000), // 15 minutos atrás
-          status: 'playing',
-          score: '1-0'
-        },
-        {
-          id: 2,
-          player1: 'Fs.SheepKing',
-          player2: 'Fs.WoolWarrior',
-          map: 'Arena',
-          gameType: '1v1 Empire Wars',
-          startTime: new Date(Date.now() - 8 * 60 * 1000), // 8 minutos atrás
-          status: 'playing',
-          score: '0-0'
-        },
-        {
-          id: 3,
-          player1: 'Fs.FlockCommander',
-          player2: 'DauT',
-          map: 'Nomad',
-          gameType: '1v1 Random Map',
-          startTime: new Date(Date.now() - 25 * 60 * 1000), // 25 minutos atrás
-          status: 'finished',
-          score: '2-1'
-        }
-      ];
+      // Preferir endpoint com composição dos times; fallback para leaderboard filtrado
+      let resp = await fetch(`${this.backendBaseUrl}/api/liveFsMatches`);
+      if (!resp.ok) throw new Error('Erro ao buscar jogos ao vivo');
+      let data = await resp.json();
 
-      // Filtrar apenas jogos em andamento
-      const activeGames = liveGames.filter(game => game.status === 'playing');
-      
+      if (!Array.isArray(data) || data.length === 0) {
+        // Fallback
+        resp = await fetch(`${this.backendBaseUrl}/api/liveFs1v1`);
+        data = await resp.json();
+        const gamesFromLb = (Array.isArray(data) ? data : []).map((p) => ({
+          id: p.profile_id,
+          player1: p.name,
+          player2: 'Adversário',
+          map: 'Ranked Queue',
+          gameType: '1v1 Random Map',
+          startTime: new Date((p.last_match_time || 0) * 1000) || new Date(),
+          status: 'playing',
+          score: '0-0',
+        }));
+        this.cache.set(cacheKey, { data: gamesFromLb, timestamp: Date.now() });
+        return gamesFromLb;
+      }
+
+      // Mapear para UI atual a partir de partidas com times
+      const games = data.map((m) => {
+        const team0Names = (m.teams?.team0 || []).map(p => p.name).join(', ');
+        const team1Names = (m.teams?.team1 || []).map(p => p.name).join(', ');
+        return {
+          id: m.id,
+          player1: team0Names || 'Time A',
+          player2: team1Names || 'Time B',
+          map: m.mapname || 'Ranked',
+          gameType: m.gameType || 'Ranked',
+          startTime: new Date((m.startgametime || 0) * 1000) || new Date(),
+          status: 'playing',
+          score: '0-0',
+        };
+      });
+
       this.cache.set(cacheKey, {
-        data: activeGames,
+        data: games,
         timestamp: Date.now()
       });
       
-      return activeGames;
+      return games;
     } catch (error) {
       console.error('Erro ao buscar jogos ao vivo:', error);
       return [];
