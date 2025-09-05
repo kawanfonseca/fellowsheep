@@ -75,11 +75,15 @@ const Header = ({ onNavigate, currentPage }) => {
               <button onClick={() => handleNavClick('/live-matches', 'live-matches')}>
                 {t('navigation.live_matches')}
               </button>
-              <button onClick={() => handleNavClick('/elo-tracker', 'elo-tracker')}>
-                📊 Elo Tracker
-              </button>
             </div>
           </div>
+          
+          <button 
+            className={`nav-button ${isActive('/elo-tracker') ? 'active' : ''}`}
+            onClick={() => handleNavClick('/elo-tracker', 'elo-tracker')}
+          >
+            📊 Elo Tracker
+          </button>
           
           <div className="dropdown">
             <button className="nav-button">
