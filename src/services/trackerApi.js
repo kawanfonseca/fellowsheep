@@ -111,9 +111,39 @@ export const getSummary = async (options = {}) => {
       ...(options.to && { to: options.to }),
     };
 
-    const response = await trackerApi.get('/api/tracker/summary', { params });
+    // Timeout mais longo para summary com detalhes
+    const timeoutMs = options.includeDetails ? 15000 : 10000;
+    
+    const response = await trackerApi.get('/api/tracker/summary', { 
+      params,
+      timeout: timeoutMs
+    });
     return response.data;
   } catch (error) {
+    // Fallback: tentar sem detalhes se deu timeout com detalhes
+    if (options.includeDetails && (error.code === 'ECONNABORTED' || error.message.includes('timeout'))) {
+      console.warn('Timeout com detalhes, tentando sem detalhes...');
+      try {
+        const fallbackOptions = { ...options, includeDetails: false };
+        const fallbackResponse = await getSummary(fallbackOptions);
+        
+        // Adicionar dados básicos dos jogadores
+        if (fallbackResponse.data?.byAccount) {
+          fallbackResponse.data.byAccount.forEach(account => {
+            account.player = {
+              nick: 'Unknown',
+              country: 'unknown',
+              ratingNow: null
+            };
+          });
+        }
+        
+        return fallbackResponse;
+      } catch (fallbackError) {
+        throw new Error(`Erro ao obter summary (fallback): ${fallbackError.message}`);
+      }
+    }
+    
     throw new Error(`Erro ao obter summary: ${error.response?.data?.error || error.message}`);
   }
 };
