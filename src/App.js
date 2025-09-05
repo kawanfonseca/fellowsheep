@@ -16,6 +16,7 @@ import BuildOrders from './pages/BuildOrders';
 import Discord from './pages/Discord';
 import Donations from './pages/Donations';
 import Contact from './pages/Contact';
+import EloTracker from './pages/EloTracker';
 
 function App() {
   const [currentPage, setCurrentPage] = useState('home');
@@ -41,6 +42,7 @@ function App() {
             <Route path="/discord" element={<Discord />} />
             <Route path="/donations" element={<Donations />} />
             <Route path="/contact" element={<Contact />} />
+            <Route path="/elo-tracker" element={<EloTracker />} />
           </Routes>
         </main>
         <Footer />
