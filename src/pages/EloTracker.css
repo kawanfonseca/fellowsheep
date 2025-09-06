@@ -1,10 +1,86 @@
 /* EloTracker.css */
 
+/* Banner de versão */
+.version-banner {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 12px 20px;
+  text-align: center;
+  font-weight: 600;
+  font-size: 0.9rem;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+  border-radius: 8px;
+  margin-bottom: 20px;
+  animation: fadeIn 0.5s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 .elo-tracker {
   max-width: 1400px;
   margin: 0 auto;
   padding: 20px;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Section Header Styles */
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+  gap: 15px;
+}
+
+.period-selector {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.period-dropdown {
+  padding: 8px 12px;
+  border: 2px solid #e1e8ed;
+  border-radius: 6px;
+  background: white;
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+
+.period-dropdown:focus {
+  outline: none;
+  border-color: #3498db;
+}
+
+.advanced-toggle {
+  background: #f8f9fa;
+  border: 2px solid #dee2e6;
+  border-radius: 6px;
+  padding: 8px 12px;
+  cursor: pointer;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+.advanced-toggle:hover {
+  background: #e9ecef;
+}
+
+.advanced-toggle.active {
+  background: #3498db;
+  color: white;
+  border-color: #2980b9;
 }
 
 /* Header */
@@ -468,5 +544,1063 @@
   .timeline-canvas {
     background: #2d2d2d;
     border-color: #404040;
+  }
+}
+
+/* Player Selector Styles */
+.player-selector {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.player-selector label {
+  color: #2c3e50;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.new-feature {
+  background: #ff6b6b;
+  color: white;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  margin-left: 4px;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+  100% { transform: scale(1); }
+}
+
+.player-dropdown {
+  padding: 8px 12px;
+  border: 2px solid #e1e8ed;
+  border-radius: 6px;
+  background: white;
+  font-size: 0.9rem;
+  min-width: 200px;
+  cursor: pointer;
+  transition: border-color 0.2s ease;
+}
+
+.player-dropdown:focus {
+  outline: none;
+  border-color: #3498db;
+  box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+}
+
+.player-dropdown:hover {
+  border-color: #bdc3c7;
+}
+
+/* Dark mode support for player selector */
+@media (prefers-color-scheme: dark) {
+  .player-selector label {
+    color: #e0e0e0;
+  }
+
+  .player-dropdown {
+    background: #2d2d2d;
+    border-color: #404040;
+    color: #e0e0e0;
+  }
+
+  .player-dropdown:focus {
+    border-color: #3498db;
+  }
+
+  .player-dropdown:hover {
+    border-color: #555;
+  }
+}
+
+/* Progress Analysis Styles */
+.progress-analysis-section {
+  margin-bottom: 40px;
+}
+
+.progress-analysis {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.progress-periods {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.progress-card {
+  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  border: 1px solid #dee2e6;
+}
+
+.progress-card.overall {
+  background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+  border-color: #ffc107;
+}
+
+.progress-card h3 {
+  margin: 0 0 15px 0;
+  color: #495057;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.progress-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+  gap: 8px;
+}
+
+.progress-stats .stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.progress-stats .stat label {
+  font-size: 0.75rem;
+  color: #6c757d;
+  margin-bottom: 2px;
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.progress-stats .stat value {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #495057;
+  line-height: 1.2;
+}
+
+.progress-insights {
+  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+  border-radius: 12px;
+  padding: 20px;
+  border: 1px solid #dee2e6;
+}
+
+.progress-insights h3 {
+  margin: 0 0 15px 0;
+  color: #495057;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.insights-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.insight-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.insight-item.insight-positive {
+  background: linear-gradient(135deg, #d4edda, #c3e6cb);
+  border-left: 4px solid #28a745;
+  color: #155724;
+}
+
+.insight-item.insight-warning {
+  background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+  border-left: 4px solid #ffc107;
+  color: #856404;
+}
+
+.insight-item.insight-info {
+  background: linear-gradient(135deg, #d1ecf1, #bee5eb);
+  border-left: 4px solid #17a2b8;
+  color: #0c5460;
+}
+
+.insight-icon {
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+.insight-message {
+  flex: 1;
+}
+
+/* Dark mode support for progress analysis */
+@media (prefers-color-scheme: dark) {
+  .progress-card {
+    background: linear-gradient(135deg, #2d2d2d, #3a3a3a);
+    border-color: #404040;
+    color: #e0e0e0;
+  }
+
+  .progress-card h3 {
+    color: #e0e0e0;
+  }
+
+  .progress-stats .stat label {
+    color: #adb5bd;
+  }
+
+  .progress-stats .stat value {
+    color: #e0e0e0;
+  }
+
+  .progress-insights {
+    background: linear-gradient(135deg, #2d2d2d, #3a3a3a);
+    border-color: #404040;
+    color: #e0e0e0;
+  }
+
+  .progress-insights h3 {
+    color: #e0e0e0;
+  }
+
+  .insight-item.insight-positive {
+    background: linear-gradient(135deg, #1e4620, #2d5a2d);
+    color: #d4edda;
+  }
+
+  .insight-item.insight-warning {
+    background: linear-gradient(135deg, #5a4a1a, #7a621a);
+    color: #fff3cd;
+  }
+
+  .insight-item.insight-info {
+    background: linear-gradient(135deg, #1a4045, #2d5a5f);
+    color: #d1ecf1;
+  }
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .progress-periods {
+    grid-template-columns: 1fr;
+  }
+
+  .progress-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .progress-card {
+    padding: 15px;
+  }
+}
+
+/* Volume vs Progress Correlation Styles */
+.correlation-analysis {
+  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+  border-radius: 12px;
+  padding: 20px;
+  border: 1px solid #dee2e6;
+  margin-top: 20px;
+}
+
+.correlation-analysis h3 {
+  margin: 0 0 20px 0;
+  color: #495057;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.correlation-analysis-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.correlation-summary {
+  background: white;
+  padding: 16px;
+  border-radius: 8px;
+  border: 1px solid #dee2e6;
+}
+
+.correlation-metric {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+.metric-label {
+  font-weight: 600;
+  color: #495057;
+}
+
+.metric-value {
+  font-size: 1.2rem;
+  font-weight: 700;
+  font-family: 'Courier New', monospace;
+}
+
+.metric-strength {
+  color: #6c757d;
+  font-size: 0.9rem;
+}
+
+.correlation-analysis-text {
+  margin: 10px 0;
+  color: #495057;
+  line-height: 1.5;
+}
+
+.correlation-recommendation {
+  background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+  padding: 12px;
+  border-radius: 6px;
+  border-left: 4px solid #2196f3;
+  color: #0d47a1;
+}
+
+.efficiency-brackets h4 {
+  margin: 0 0 15px 0;
+  color: #495057;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.brackets-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 15px;
+}
+
+.bracket-card {
+  background: white;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.bracket-card h5 {
+  margin: 0 0 12px 0;
+  color: #495057;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.bracket-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.bracket-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.bracket-stat label {
+  font-size: 0.8rem;
+  color: #6c757d;
+  margin-bottom: 2px;
+  font-weight: 500;
+}
+
+.bracket-stat value {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #495057;
+}
+
+.correlation-meta {
+  text-align: center;
+  color: #6c757d;
+  font-size: 0.85rem;
+}
+
+/* Dark mode support for correlation analysis */
+@media (prefers-color-scheme: dark) {
+  .correlation-analysis {
+    background: linear-gradient(135deg, #2d2d2d, #3a3a3a);
+    border-color: #404040;
+  }
+
+  .correlation-analysis h3 {
+    color: #e0e0e0;
+  }
+
+  .correlation-summary {
+    background: #2d2d2d;
+    border-color: #404040;
+    color: #e0e0e0;
+  }
+
+  .metric-label {
+    color: #e0e0e0;
+  }
+
+  .metric-strength {
+    color: #adb5bd;
+  }
+
+  .correlation-analysis-text {
+    color: #e0e0e0;
+  }
+
+  .correlation-recommendation {
+    background: linear-gradient(135deg, #1a237e, #283593);
+    color: #bbdefb;
+  }
+
+  .efficiency-brackets h4 {
+    color: #e0e0e0;
+  }
+
+  .bracket-card {
+    background: #2d2d2d;
+    border-color: #404040;
+  }
+
+  .bracket-card h5 {
+    color: #e0e0e0;
+  }
+
+  .bracket-stat label {
+    color: #adb5bd;
+  }
+
+  .bracket-stat value {
+    color: #e0e0e0;
+  }
+
+  .correlation-meta {
+    color: #adb5bd;
+  }
+}
+
+/* Responsive adjustments for correlation */
+@media (max-width: 768px) {
+  .brackets-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .bracket-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .correlation-metric {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+  }
+}
+
+/* Goals Section Styles */
+.goals-section {
+  margin-top: 30px;
+}
+
+.goals-section h3 {
+  margin: 0 0 20px 0;
+  color: #495057;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.goals-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.goal-item {
+  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+  border-radius: 12px;
+  padding: 20px;
+  border: 1px solid #dee2e6;
+}
+
+.goal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+
+.goal-header span:first-child {
+  font-weight: 600;
+  color: #495057;
+}
+
+.goal-progress {
+  font-weight: 700;
+  color: #3498db;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 8px;
+  background: #e9ecef;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.progress-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: width 0.3s ease;
+}
+
+.progress-fill.completed {
+  background: linear-gradient(135deg, #28a745, #20c997);
+}
+
+.progress-fill.good {
+  background: linear-gradient(135deg, #ffc107, #fd7e14);
+}
+
+.progress-fill.normal {
+  background: linear-gradient(135deg, #6c757d, #adb5bd);
+}
+
+.goal-status {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #495057;
+}
+
+.goal-settings {
+  background: white;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  padding: 16px;
+}
+
+.goal-settings h4 {
+  margin: 0 0 12px 0;
+  color: #495057;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.goal-inputs {
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.goal-input {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.goal-input label {
+  font-size: 0.85rem;
+  color: #6c757d;
+  font-weight: 500;
+}
+
+.goal-input input {
+  padding: 6px 8px;
+  border: 2px solid #e1e8ed;
+  border-radius: 4px;
+  font-size: 0.9rem;
+  width: 80px;
+}
+
+.goal-input input:focus {
+  outline: none;
+  border-color: #3498db;
+}
+
+/* Advanced Analysis Styles */
+.advanced-analysis {
+  margin-top: 30px;
+}
+
+.advanced-analysis h3 {
+  margin: 0 0 20px 0;
+  color: #495057;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.advanced-analysis-content {
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
+}
+
+.performance-by-day h4,
+.win-streaks h4,
+.recommendations h4 {
+  margin: 0 0 15px 0;
+  color: #495057;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.performance-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+}
+
+.performance-card {
+  background: white;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.day-name {
+  font-weight: 700;
+  color: #495057;
+  margin-bottom: 12px;
+  font-size: 1.1rem;
+}
+
+.day-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.day-stats .stat {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.day-stats .label {
+  color: #6c757d;
+  font-size: 0.85rem;
+}
+
+.day-stats .positive {
+  color: #28a745;
+  font-weight: 600;
+}
+
+.day-stats .negative {
+  color: #dc3545;
+  font-weight: 600;
+}
+
+.streaks-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.streak-item {
+  background: white;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  padding: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.streak-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.streak-length {
+  font-weight: 700;
+  color: #495057;
+}
+
+.streak-elo {
+  font-size: 0.85rem;
+  color: #28a745;
+  font-weight: 600;
+}
+
+.streak-period {
+  font-size: 0.8rem;
+  color: #6c757d;
+}
+
+.recommendations-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.recommendations-list > div {
+  background: white;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  padding: 16px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.recommendations-list .icon {
+  font-size: 1.5rem;
+  flex-shrink: 0;
+}
+
+.recommendations-list .title {
+  font-weight: 700;
+  color: #495057;
+  margin-bottom: 4px;
+}
+
+.recommendations-list .description {
+  color: #6c757d;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+.recommendations-list .priority-high .title {
+  color: #dc3545;
+}
+
+.recommendations-list .priority-medium .title {
+  color: #fd7e14;
+}
+
+/* Dark mode support for new features */
+@media (prefers-color-scheme: dark) {
+  .section-header {
+    color: #e0e0e0;
+  }
+
+  .period-dropdown {
+    background: #2d2d2d;
+    border-color: #404040;
+    color: #e0e0e0;
+  }
+
+  .advanced-toggle {
+    background: #2d2d2d;
+    border-color: #404040;
+    color: #e0e0e0;
+  }
+
+  .goal-item {
+    background: linear-gradient(135deg, #2d2d2d, #3a3a3a);
+    border-color: #404040;
+  }
+
+  .goal-header span:first-child {
+    color: #e0e0e0;
+  }
+
+  .goal-status {
+    color: #e0e0e0;
+  }
+
+  .goal-settings {
+    background: #2d2d2d;
+    border-color: #404040;
+  }
+
+  .goal-settings h4 {
+    color: #e0e0e0;
+  }
+
+  .goal-input label {
+    color: #adb5bd;
+  }
+
+  .goal-input input {
+    background: #2d2d2d;
+    border-color: #404040;
+    color: #e0e0e0;
+  }
+
+  .performance-card {
+    background: #2d2d2d;
+    border-color: #404040;
+  }
+
+  .day-name {
+    color: #e0e0e0;
+  }
+
+  .day-stats .label {
+    color: #adb5bd;
+  }
+
+  .streak-item {
+    background: #2d2d2d;
+    border-color: #404040;
+  }
+
+  .streak-length {
+    color: #e0e0e0;
+  }
+
+  .streak-period {
+    color: #adb5bd;
+  }
+
+  .recommendations-list > div {
+    background: #2d2d2d;
+    border-color: #404040;
+  }
+
+  .recommendations-list .title {
+    color: #e0e0e0;
+  }
+
+  .recommendations-list .description {
+    color: #adb5bd;
+  }
+}
+
+/* Responsive adjustments for new features */
+@media (max-width: 768px) {
+  .section-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .performance-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .goal-inputs {
+    flex-direction: column;
+  }
+
+  .goal-input input {
+    width: 100%;
+  }
+
+  .streak-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
+  }
+}
+
+/* Timeline note styles */
+.timeline-note {
+  margin: 10px 0 0 0;
+  padding: 12px;
+  background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+  border-radius: 6px;
+  border-left: 4px solid #2196f3;
+  color: #0d47a1;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+/* Dark mode support for timeline note */
+@media (prefers-color-scheme: dark) {
+  .timeline-note {
+    background: linear-gradient(135deg, #1a237e, #283593);
+    color: #bbdefb;
+  }
+}
+
+/* Game Patterns Analysis Styles */
+.game-patterns-analysis {
+  background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+  border-radius: 12px;
+  padding: 20px;
+  border: 1px solid #dee2e6;
+  margin-top: 20px;
+}
+
+.game-patterns-analysis h3 {
+  margin: 0 0 20px 0;
+  color: #495057;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.game-patterns-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.patterns-summary {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 15px;
+}
+
+.pattern-card {
+  background: white;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  padding: 16px;
+  text-align: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.pattern-card h4 {
+  margin: 0 0 8px 0;
+  color: #495057;
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.pattern-value {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #495057;
+  margin-bottom: 4px;
+}
+
+.pattern-card small {
+  color: #6c757d;
+  font-size: 0.75rem;
+}
+
+.weekday-distribution h4,
+.pattern-insights h4 {
+  margin: 0 0 15px 0;
+  color: #495057;
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.weekday-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 10px;
+}
+
+.weekday-item {
+  background: white;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  padding: 12px;
+  text-align: center;
+}
+
+.weekday-name {
+  font-weight: 600;
+  color: #495057;
+  margin-bottom: 8px;
+  font-size: 0.9rem;
+}
+
+.weekday-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.weekday-games,
+.weekday-winrate {
+  font-size: 0.8rem;
+  color: #6c757d;
+}
+
+.weekday-elo {
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.weekday-elo.positive {
+  color: #28a745;
+}
+
+.weekday-elo.negative {
+  color: #dc3545;
+}
+
+.pattern-insights {
+  background: white;
+  border: 1px solid #dee2e6;
+  border-radius: 8px;
+  padding: 16px;
+}
+
+/* Dark mode support for game patterns */
+@media (prefers-color-scheme: dark) {
+  .game-patterns-analysis {
+    background: linear-gradient(135deg, #2d2d2d, #3a3a3a);
+    border-color: #404040;
+  }
+
+  .game-patterns-analysis h3 {
+    color: #e0e0e0;
+  }
+
+  .pattern-card {
+    background: #2d2d2d;
+    border-color: #404040;
+  }
+
+  .pattern-card h4 {
+    color: #e0e0e0;
+  }
+
+  .pattern-value {
+    color: #e0e0e0;
+  }
+
+  .pattern-card small {
+    color: #adb5bd;
+  }
+
+  .weekday-distribution h4,
+  .pattern-insights h4 {
+    color: #e0e0e0;
+  }
+
+  .weekday-item {
+    background: #2d2d2d;
+    border-color: #404040;
+  }
+
+  .weekday-name {
+    color: #e0e0e0;
+  }
+
+  .weekday-games,
+  .weekday-winrate {
+    color: #adb5bd;
+  }
+
+  .pattern-insights {
+    background: #2d2d2d;
+    border-color: #404040;
+  }
+}
+
+/* Responsive adjustments for game patterns */
+@media (max-width: 768px) {
+  .patterns-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .weekday-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .pattern-card {
+    padding: 12px;
+  }
+
+  .weekday-item {
+    padding: 10px;
   }
 }

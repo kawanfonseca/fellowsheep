@@ -191,6 +191,32 @@ export const getCycles = async (options = {}) => {
 };
 
 /**
+ * Obtém histórico completo de um jogador específico
+ * @param {number} profileId - ID do perfil do jogador
+ * @param {Object} options - Opções de filtro
+ * @param {number} options.from - Timestamp início
+ * @param {number} options.to - Timestamp fim
+ * @param {number} options.limit - Limite de resultados
+ * @param {string} options.sort - Ordem ('asc' ou 'desc')
+ * @returns {Promise<Object>}
+ */
+export const getPlayerHistory = async (profileId, options = {}) => {
+  try {
+    const params = {
+      ...(options.from && { from: options.from }),
+      ...(options.to && { to: options.to }),
+      ...(options.limit && { limit: options.limit }),
+      ...(options.sort && { sort: options.sort }),
+    };
+
+    const response = await trackerApi.get(`/api/tracker/player/${profileId}/history`, { params });
+    return response.data;
+  } catch (error) {
+    throw new Error(`Erro ao obter histórico do jogador: ${error.response?.data?.error || error.message}`);
+  }
+};
+
+/**
  * Verifica status da API
  * @returns {Promise<boolean>}
  */
@@ -377,6 +403,7 @@ export default {
   getSummary,
   getTimeline,
   getCycles,
+  getPlayerHistory,
   checkApiStatus,
   utils,
   presets
